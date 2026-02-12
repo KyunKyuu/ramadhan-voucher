@@ -65,12 +65,25 @@ class ClaimService
      * @param int $picId
      * @param string $name
      * @param string $email
+     * @param string|null $phone
+     * @param float $zakatFitrahAmount
+     * @param float $infaqAmount
+     * @param float $sodaqohAmount
      * @return Claim
      * @throws ValidationException
      */
-    public function processClaim(string $code, int $picId, string $name, string $email): Claim
+    public function processClaim(
+        string $code,
+        int $picId,
+        string $name,
+        string $email,
+        ?string $phone = null,
+        float $zakatFitrahAmount = 0,
+        float $infaqAmount = 0,
+        float $sodaqohAmount = 0
+    ): Claim
     {
-        return DB::transaction(function () use ($code, $picId, $name, $email) {
+        return DB::transaction(function () use ($code, $picId, $name, $email, $phone, $zakatFitrahAmount, $infaqAmount, $sodaqohAmount) {
             // Lock the voucher row for update
             $voucher = InitialVoucher::where('code', $code)
                 ->lockForUpdate()
@@ -98,6 +111,10 @@ class ClaimService
                 'initial_voucher_id' => $voucher->id,
                 'name' => $name,
                 'email' => $email,
+                'phone' => $phone,
+                'zakat_fitrah_amount' => $zakatFitrahAmount,
+                'infaq_amount' => $infaqAmount,
+                'sodaqoh_amount' => $sodaqohAmount,
                 'public_token' => $publicToken,
             ]);
 
@@ -107,8 +124,13 @@ class ClaimService
                 'claimed_at' => now(),
             ]);
 
-            // Generate merchant vouchers
-            $this->merchantVoucherGenerator->generateForClaim($voucher);
+            $minClaimAmount = (float) config('app.min_claim_amount', 35000);
+            $totalAmount = $zakatFitrahAmount + $infaqAmount + $sodaqohAmount;
+
+            // Generate merchant vouchers only if minimum total is met
+            if ($totalAmount >= $minClaimAmount) {
+                $this->merchantVoucherGenerator->generateForClaim($voucher);
+            }
 
             return $claim;
         });
@@ -138,7 +160,7 @@ class ClaimService
     {
         return Claim::with([
             'initialVoucher.pic',
-            'merchantVouchers.merchant.offer',
+            'merchantVouchers.merchant.offer.images',
         ])->where('public_token', $token)->first();
     }
 }

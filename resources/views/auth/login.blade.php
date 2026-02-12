@@ -227,6 +227,7 @@
                         <option value="">-- Pilih Role --</option>
                         <option value="MERCHANT" {{ old('role') == 'MERCHANT' ? 'selected' : '' }}>Merchant</option>
                         <option value="SUPERADMIN" {{ old('role') == 'SUPERADMIN' ? 'selected' : '' }}>Superadmin</option>
+                        <option value="PIC" {{ old('role') == 'PIC' ? 'selected' : '' }}>PIC</option>
                     </select>
                 </div>
 

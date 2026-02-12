@@ -58,6 +58,8 @@ return [
 
     'asset_url' => env('ASSET_URL', '/'),
 
+    'min_claim_amount' => env('MIN_CLAIM_AMOUNT', 35000),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

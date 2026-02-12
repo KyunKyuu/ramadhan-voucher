@@ -70,6 +70,59 @@
                     </label>
                     <p class="mt-1 text-xs text-gray-500">PIC yang tidak aktif tidak bisa menerima assignment voucher baru.</p>
                 </div>
+
+                <div class="border-t pt-4 mt-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Kredensial Login</h3>
+                    
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                            Email <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email" 
+                            value="{{ old('email', $pic->email ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('email') border-red-500 @enderror"
+                            required
+                        >
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                            Password {{ isset($pic) ? '(Kosongkan jika tidak ingin mengubah)' : '<span class="text-red-500">*</span>' }}
+                        </label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('password') border-red-500 @enderror"
+                            {{ isset($pic) ? '' : 'required' }}
+                        >
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password Confirmation -->
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
+                            Konfirmasi Password {{ isset($pic) ? '' : '<span class="text-red-500">*</span>' }}
+                        </label>
+                        <input 
+                            type="password" 
+                            name="password_confirmation" 
+                            id="password_confirmation" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            {{ isset($pic) ? '' : 'required' }}
+                        >
+                    </div>
+                </div>
             </div>
 
             <!-- Actions -->

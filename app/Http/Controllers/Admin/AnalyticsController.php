@@ -72,6 +72,22 @@ class AnalyticsController extends Controller
             ->take(10)
             ->get();
 
+        // Top PICs by commission (from claimed vouchers) - filtered by date range
+        $topPicsByCommission = DB::table('pics')
+            ->join('initial_vouchers', 'pics.id', '=', 'initial_vouchers.assigned_pic_id')
+            ->where('initial_vouchers.status', 'CLAIMED')
+            ->whereBetween('initial_vouchers.claimed_at', [$dateFrom, $dateTo . ' 23:59:59'])
+            ->select(
+                'pics.id',
+                'pics.name',
+                DB::raw('SUM(initial_vouchers.commission_amount) as commission_total'),
+                DB::raw('COUNT(initial_vouchers.id) as claims_count')
+            )
+            ->groupBy('pics.id', 'pics.name')
+            ->orderBy('commission_total', 'desc')
+            ->take(10)
+            ->get();
+
         // Redemptions per merchant
         $merchantStats = Merchant::withCount(['merchantVouchers as total_vouchers'])
             ->withCount(['merchantVouchers as redeemed_vouchers' => function ($query) {
@@ -108,6 +124,7 @@ class AnalyticsController extends Controller
             'kpis',
             'topPicsByClaims',
             'topPicsByRedeems',
+            'topPicsByCommission',
             'merchantStats',
             'dailyTrend',
             'dateFrom',

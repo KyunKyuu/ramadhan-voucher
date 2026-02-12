@@ -17,11 +17,13 @@ class InitialVoucher extends Model
         'code',
         'status',
         'assigned_pic_id',
+        'commission_amount',
         'claimed_at',
     ];
 
     protected $casts = [
         'claimed_at' => 'datetime',
+        'commission_amount' => 'decimal:2',
     ];
 
     /**

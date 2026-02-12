@@ -66,16 +66,35 @@
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-2 gap-4">
-        <a href="{{ route('merchant.scan') }}" class="bg-blue-600 text-white p-4 rounded-lg text-center hover:bg-blue-700">
-            <div class="text-3xl mb-2">📱</div>
-            <div class="font-semibold">Scan Voucher</div>
-        </a>
-        <a href="{{ route('merchant.redemptions') }}" class="bg-gray-600 text-white p-4 rounded-lg text-center hover:bg-gray-700">
-            <div class="text-3xl mb-2">📜</div>
-            <div class="font-semibold">Lihat Riwayat</div>
-        </a>
+    <!-- Quick Actions & Voucher Preview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Quick Actions -->
+        <div class="md:col-span-2 grid grid-cols-2 gap-4">
+            <a href="{{ route('merchant.scan') }}" class="bg-blue-600 text-white p-6 rounded-xl flex flex-col items-center justify-center hover:bg-blue-700 transition shadow-lg">
+                <div class="text-4xl mb-3">📱</div>
+                <div class="font-bold text-lg">Scan Voucher</div>
+            </a>
+            <a href="{{ route('merchant.redemptions') }}" class="bg-gray-800 text-white p-6 rounded-xl flex flex-col items-center justify-center hover:bg-gray-900 transition shadow-lg">
+                <div class="text-4xl mb-3">📜</div>
+                <div class="font-bold text-lg">Lihat Riwayat</div>
+            </a>
+        </div>
+
+        <!-- Voucher Template Preview -->
+        <div class="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center">
+            <h3 class="font-semibold text-gray-900 mb-3">Desain Voucher Anda</h3>
+            <div class="relative w-full aspect-[2/1] rounded-lg overflow-hidden border border-gray-200 shadow-sm group hover:shadow-md transition">
+                @php
+                    $template = auth()->user()->merchant->voucher_template ?? 'baju.jpeg';
+                @endphp
+                <img src="{{ asset('images/voucher/' . $template) }}" alt="Voucher Template" class="w-full h-full object-cover">
+            </div>
+            <p class="text-xs text-center text-gray-500 mt-2">
+                Template: {{ $template }}
+                <br>
+                <span class="text-gray-400">Hubungi Admin untuk mengubah</span>
+            </p>
+        </div>
     </div>
 </div>
 @endsection

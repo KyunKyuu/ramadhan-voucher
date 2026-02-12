@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Merchant extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected static function booted()
+    {
+        static::deleted(function ($merchant) {
+            $merchant->offers()->delete();
+            $merchant->merchantVouchers()->delete();
+            $merchant->users()->delete();
+        });
+    }
 
     protected $fillable = [
         'name',
@@ -18,6 +28,9 @@ class Merchant extends Model
         'password',
         'logo_url',
         'is_active',
+        'voucher_template',
+        'address',
+        'website',
     ];
 
     protected $hidden = [

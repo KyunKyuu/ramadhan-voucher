@@ -28,6 +28,10 @@
                 <p class="text-lg text-gray-900">{{ $claim->email }}</p>
             </div>
             <div>
+                <label class="block text-sm font-medium text-gray-600">No. HP</label>
+                <p class="text-lg text-gray-900">{{ $claim->phone ?? '-' }}</p>
+            </div>
+            <div>
                 <label class="block text-sm font-medium text-gray-600">Voucher Code</label>
                 <p class="text-lg font-mono bg-gray-100 px-3 py-1 rounded inline-block">{{ $claim->initialVoucher->code ?? 'N/A' }}</p>
             </div>
@@ -53,6 +57,14 @@
                 <a href="{{ route('public.vouchers', $claim->public_token) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
                     View Public Page →
                 </a>
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-600">Nominal Penyaluran</label>
+                <p class="text-lg text-gray-900">
+                    Zakat Fitrah: Rp {{ number_format($claim->zakat_fitrah_amount ?? 0, 0, ',', '.') }},
+                    Infaq: Rp {{ number_format($claim->infaq_amount ?? 0, 0, ',', '.') }},
+                    Sodaqoh: Rp {{ number_format($claim->sodaqoh_amount ?? 0, 0, ',', '.') }}
+                </p>
             </div>
         </div>
     </div>

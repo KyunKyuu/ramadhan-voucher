@@ -15,8 +15,26 @@ class Claim extends Model
         'initial_voucher_id',
         'name',
         'email',
+        'phone',
+        'zakat_fitrah_amount',
+        'infaq_amount',
+        'sodaqoh_amount',
         'public_token',
     ];
+
+    protected $casts = [
+        'zakat_fitrah_amount' => 'decimal:2',
+        'infaq_amount' => 'decimal:2',
+        'sodaqoh_amount' => 'decimal:2',
+    ];
+
+    /**
+     * Get the total donation amount.
+     */
+    public function getTotalDonationAmountAttribute(): float
+    {
+        return $this->zakat_fitrah_amount + $this->infaq_amount + $this->sodaqoh_amount;
+    }
 
     /**
      * Get the initial voucher this claim is for.

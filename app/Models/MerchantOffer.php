@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MerchantOffer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'merchant_id',
@@ -41,5 +42,12 @@ class MerchantOffer extends Model
             return $this->discount_value . '%';
         }
         return 'Rp ' . number_format($this->discount_value, 0, ',', '.');
+    }
+    /**
+     * Get the images for this offer.
+     */
+    public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MerchantOfferImage::class);
     }
 }

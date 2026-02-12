@@ -13,6 +13,8 @@ class Pic extends Model
     protected $fillable = [
         'name',
         'code',
+        'email',
+        'password',
         'is_active',
     ];
 
@@ -26,5 +28,10 @@ class Pic extends Model
     public function initialVouchers(): HasMany
     {
         return $this->hasMany(InitialVoucher::class, 'assigned_pic_id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'pic_id');
     }
 }

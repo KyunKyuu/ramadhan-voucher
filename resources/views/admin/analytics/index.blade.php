@@ -82,7 +82,7 @@
     </div>
 
     <!-- Top PICs & Merchant Stats -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Top PICs by Claims -->
         <div class="bg-white rounded-lg shadow">
             <div class="p-6 border-b">
@@ -120,6 +120,28 @@
                         <div class="text-right">
                             <p class="text-2xl font-bold text-purple-600">{{ $pic->redeems_count }}</p>
                             <p class="text-xs text-gray-500">redeems</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-gray-500">No data</div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Top PICs by Commission -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6 border-b">
+                <h3 class="text-lg font-semibold text-gray-900">Top PICs by Commission</h3>
+            </div>
+            <div class="divide-y">
+                @forelse($topPicsByCommission as $pic)
+                    <div class="p-4 flex justify-between items-center">
+                        <div>
+                            <p class="font-medium text-gray-900">{{ $pic->name }}</p>
+                            <p class="text-xs text-gray-500">{{ $pic->claims_count }} claims</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-teal-600">Rp {{ number_format($pic->commission_total ?? 0, 0, ',', '.') }}</p>
                         </div>
                     </div>
                 @empty

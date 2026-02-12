@@ -47,7 +47,7 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <!-- Total Vouchers -->
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
@@ -86,6 +86,19 @@
                 </div>
             </div>
         </div>
+        <!-- Commission Claimed -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Komisi Terklaim</p>
+                    <p class="text-2xl font-bold text-teal-600">Rp {{ number_format($stats['commission_claimed'], 0, ',', '.') }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Pending: Rp {{ number_format($stats['commission_pending'], 0, ',', '.') }}</p>
+                </div>
+                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+                    <span class="text-sm font-semibold text-teal-700">Rp</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Vouchers Table -->
@@ -101,6 +114,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kode Voucher</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Komisi</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama Claimer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email Claimer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu Klaim</th>
@@ -130,6 +144,13 @@
                                     </span>
                                 @endif
                             </td>
+                            <td class="px-6 py-4 text-right">
+                                @if($voucher->commission_amount > 0)
+                                    <span class="text-sm font-medium text-gray-900">Rp {{ number_format($voucher->commission_amount, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="text-sm text-gray-400">-</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4">
                                 @if($voucher->claim)
                                     <span class="text-sm font-medium text-gray-900">{{ $voucher->claim->name }}</span>
@@ -154,7 +175,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                                 Belum ada voucher yang di-assign ke PIC ini.
                             </td>
                         </tr>

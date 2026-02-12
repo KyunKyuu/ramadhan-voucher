@@ -45,6 +45,24 @@
             <p class="mt-1 text-sm text-gray-500">If empty, will auto-generate based on current date/time</p>
         </div>
 
+        <!-- Commission Input -->
+        <div>
+            <label for="commission_amount" class="block text-sm font-medium text-gray-700">Komisi per Voucher (Rp)</label>
+            <input 
+                type="number" 
+                name="commission_amount" 
+                id="commission_amount" 
+                min="0"
+                step="1"
+                value="{{ old('commission_amount', 0) }}"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm @error('commission_amount') border-red-500 @enderror"
+            >
+            @error('commission_amount')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+            <p class="mt-1 text-sm text-gray-500">Komisi ini akan menempel ke voucher dan baru berlaku saat voucher diklaim.</p>
+        </div>
+
         <!-- Submit Button -->
         <div class="flex items-center justify-end space-x-3">
             <button 

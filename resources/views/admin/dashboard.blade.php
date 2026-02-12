@@ -10,6 +10,69 @@
         <p class="text-gray-600">Overview sistem voucher Ramadhan</p>
     </div>
 
+    <!-- Donation Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Zakat Fitrah -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-emerald-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Zakat Fitrah</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($donations['zakat_fitrah'], 0, ',', '.') }}</p>
+                </div>
+                <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🕌</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Infaq -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Infaq</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($donations['infaq'], 0, ',', '.') }}</p>
+                </div>
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🤝</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sodaqoh -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Sodaqoh</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($donations['sodaqoh'], 0, ',', '.') }}</p>
+                </div>
+                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🤲</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-600 bg-gradient-to-r from-white to-purple-50">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Penyaluran</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($donations['total'], 0, ',', '.') }}</p>
+                </div>
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">💰</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tren Penyaluran Harian (30 Hari Terakhir)</h3>
+        <div class="relative h-80 w-full">
+            <canvas id="donationChart"></canvas>
+        </div>
+    </div>
+
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Vouchers Generated -->
@@ -178,3 +241,82 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('donationChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode($chartLabels) !!},
+                datasets: [
+                    {
+                        label: 'Zakat Fitrah',
+                        data: {!! json_encode($chartData['zakat']) !!},
+                        borderColor: '#10b981', // emerald-500
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Infaq',
+                        data: {!! json_encode($chartData['infaq']) !!},
+                        borderColor: '#3b82f6', // blue-500
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Sodaqoh',
+                        data: {!! json_encode($chartData['sodaqoh']) !!},
+                        borderColor: '#eab308', // yellow-500
+                        backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endpush

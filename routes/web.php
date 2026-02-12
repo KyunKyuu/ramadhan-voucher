@@ -91,6 +91,13 @@ Route::middleware(['auth', 'role:MERCHANT'])->prefix('merchant')->name('merchant
     Route::get('/analytics', [MerchantAnalyticsController::class, 'index'])->name('analytics');
 });
 
+// PIC Routes - Protected by auth and role:PIC middleware
+use App\Http\Controllers\Pic\DashboardController as PicDashboardController;
+
+Route::middleware(['auth', 'role:PIC'])->prefix('pic')->name('pic.')->group(function () {
+    Route::get('/', [PicDashboardController::class, 'index'])->name('dashboard');
+});
+
 // Public Routes - No authentication required
 use App\Http\Controllers\Public\ClaimController;
 use App\Http\Controllers\Public\VoucherListController;

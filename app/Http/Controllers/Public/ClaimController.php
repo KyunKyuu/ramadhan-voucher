@@ -54,14 +54,32 @@ class ClaimController extends Controller
             'pic_id' => 'required|exists:pics,id',
             'name' => 'required|string|max:100',
             'email' => 'required|email|max:100',
+            'phone' => 'required|string|max:30',
+            'zakat_fitrah_amount' => 'nullable|numeric|min:0',
+            'infaq_amount' => 'nullable|numeric|min:0',
+            'sodaqoh_amount' => 'nullable|numeric|min:0',
         ]);
 
         try {
+            $zakatFitrahAmount = isset($validated['zakat_fitrah_amount'])
+                ? (float) $validated['zakat_fitrah_amount']
+                : 0;
+            $infaqAmount = isset($validated['infaq_amount'])
+                ? (float) $validated['infaq_amount']
+                : 0;
+            $sodaqohAmount = isset($validated['sodaqoh_amount'])
+                ? (float) $validated['sodaqoh_amount']
+                : 0;
+
             $claim = $this->claimService->processClaim(
                 $validated['code'],
                 $validated['pic_id'],
                 $validated['name'],
-                $validated['email']
+                $validated['email'],
+                $validated['phone'],
+                $zakatFitrahAmount,
+                $infaqAmount,
+                $sodaqohAmount
             );
 
             return redirect()->route('public.vouchers', ['token' => $claim->public_token]);

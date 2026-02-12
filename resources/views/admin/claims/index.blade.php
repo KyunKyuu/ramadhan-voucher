@@ -74,6 +74,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Voucher Code</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">PIC</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Donation</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Claimed At</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
@@ -90,6 +91,9 @@
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $claim->initialVoucher->pic->name ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $claim->initialVoucher->batch->name ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">
+                                Rp {{ number_format($claim->total_donation_amount, 0, ',', '.') }}
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $claim->created_at->format('d M Y H:i') }}</td>
                             <td class="px-6 py-4">
                                 <a href="{{ route('admin.claims.show', $claim->id) }}" class="text-blue-600 hover:text-blue-800 text-sm">View Details</a>

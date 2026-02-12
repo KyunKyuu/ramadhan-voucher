@@ -74,6 +74,22 @@
                 >
             </div>
 
+            <!-- Phone Input -->
+            <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
+                    No. HP <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    name="phone" 
+                    id="phone" 
+                    value="{{ old('phone') }}"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('phone') border-red-500 @enderror"
+                    placeholder="Contoh: 081234567890"
+                    required
+                >
+            </div>
+
             <!-- Email Input -->
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
@@ -88,6 +104,61 @@
                     placeholder="nama@email.com"
                     required
                 >
+            </div>
+
+            <!-- Nominal Penyaluran -->
+            <div class="pt-2">
+                <p class="text-sm font-medium text-gray-700 mb-2">Nominal Penyaluran</p>
+                <div class="space-y-3">
+                    <div>
+                        <label for="zakat_fitrah_amount" class="block text-xs font-medium text-gray-600 mb-1">
+                            Zakat Fitrah (Rp)
+                        </label>
+                        <input 
+                            type="number" 
+                            name="zakat_fitrah_amount" 
+                            id="zakat_fitrah_amount" 
+                            min="0"
+                            step="1"
+                            value="{{ old('zakat_fitrah_amount', 0) }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_fitrah_amount') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                    </div>
+                    <div>
+                        <label for="infaq_amount" class="block text-xs font-medium text-gray-600 mb-1">
+                            Infaq (Rp)
+                        </label>
+                        <input 
+                            type="number" 
+                            name="infaq_amount" 
+                            id="infaq_amount" 
+                            min="0"
+                            step="1"
+                            value="{{ old('infaq_amount', 0) }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('infaq_amount') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                    </div>
+                    <div>
+                        <label for="sodaqoh_amount" class="block text-xs font-medium text-gray-600 mb-1">
+                            Sodaqoh (Rp)
+                        </label>
+                        <input 
+                            type="number" 
+                            name="sodaqoh_amount" 
+                            id="sodaqoh_amount" 
+                            min="0"
+                            step="1"
+                            value="{{ old('sodaqoh_amount', 0) }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('sodaqoh_amount') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                    </div>
+                </div>
+                <p class="mt-2 text-xs text-gray-500">
+                    Minimum total penyaluran Rp {{ number_format(config('app.min_claim_amount', 35000), 0, ',', '.') }} untuk mendapatkan voucher merchant.
+                </p>
             </div>
 
             <!-- Submit Button -->
@@ -109,6 +180,61 @@
     <div class="mt-4 text-center">
         <p class="text-white/80 text-sm">Kode Voucher</p>
         <p class="text-white font-mono text-lg font-bold tracking-wider">{{ $code }}</p>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+        <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center z-10">
+            <h3 class="text-xl font-bold text-gray-900" id="detailMerchantName">Detail Merchant</h3>
+            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="p-6 space-y-6">
+            <!-- Merchant Header -->
+            <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
+                    <img id="detailLogo" src="" alt="Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-gray-900" id="detailName"></h4>
+                    <p class="text-sm text-gray-600 flex items-center mt-1" id="detailAddressContainer">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span id="detailAddress"></span>
+                    </p>
+                    <a href="#" target="_blank" id="detailWebsite" class="text-sm text-blue-600 hover:underline flex items-center mt-1">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                        </svg>
+                        <span id="detailWebsiteText"></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Product Images Carousel -->
+            <div id="imagesContainer" class="hidden">
+                 <h5 class="font-semibold text-gray-900 mb-3">Foto Produk</h5>
+                 <div class="relative group">
+                    <div id="carouselWrapper" class="flex overflow-x-auto snap-x snap-mandatory space-x-4 pb-4">
+                        <!-- Images injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <h5 class="font-semibold text-gray-900 mb-2">Deskripsi Penawaran</h5>
+                <p id="detailDescription" class="text-gray-600 whitespace-pre-line"></p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -137,13 +263,4 @@
     }
 </style>
 
-<script>
-    $(document).ready(function() {
-        $('#pic_id').select2({
-            placeholder: '-- Pilih PIC --',
-            allowClear: false,
-            width: '100%'
-        });
-    });
-</script>
 @endsection

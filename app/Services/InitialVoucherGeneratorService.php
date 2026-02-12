@@ -15,11 +15,12 @@ class InitialVoucherGeneratorService
      * @param int $count Number of vouchers to generate
      * @param string|null $batchName Optional batch name
      * @param int $adminId ID of the admin creating the batch
+     * @param float $commissionAmount Commission per voucher
      * @return VoucherBatch
      */
-    public function generate(int $count, ?string $batchName, int $adminId): VoucherBatch
+    public function generate(int $count, ?string $batchName, int $adminId, float $commissionAmount = 0): VoucherBatch
     {
-        return DB::transaction(function () use ($count, $batchName, $adminId) {
+        return DB::transaction(function () use ($count, $batchName, $adminId, $commissionAmount) {
             // Create the batch
             $batch = VoucherBatch::create([
                 'name' => $batchName ?? 'Batch ' . now()->format('Y-m-d H:i:s'),
@@ -34,6 +35,7 @@ class InitialVoucherGeneratorService
                     'batch_id' => $batch->id,
                     'code' => $this->generateUniqueCode(),
                     'status' => 'UNASSIGNED',
+                    'commission_amount' => $commissionAmount,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
