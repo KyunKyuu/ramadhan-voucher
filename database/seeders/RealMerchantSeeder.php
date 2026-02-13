@@ -83,6 +83,17 @@ class RealMerchantSeeder extends Seeder
                     'is_active' => true,
                 ]
             );
+
+            // Ensure Merchant User Exists
+            \App\Models\User::firstOrCreate(
+                ['email' => $merchant->email],
+                [
+                    'name' => $merchant->name,
+                    'password' => $merchant->password,
+                    'role' => 'MERCHANT',
+                    'merchant_id' => $merchant->id,
+                ]
+            );
         }
 
         $this->command->info('Real merchants seeded successfully!');

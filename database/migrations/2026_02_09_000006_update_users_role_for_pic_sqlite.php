@@ -19,12 +19,13 @@ return new class extends Migration
         $columns = Schema::getColumnListing('users');
 
         Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('users_old');
         Schema::rename('users', 'users_old');
 
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->unique('users_email_unique_v2');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['SUPERADMIN', 'MERCHANT', 'PIC'])->default('MERCHANT');

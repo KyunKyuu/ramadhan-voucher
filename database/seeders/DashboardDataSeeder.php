@@ -45,6 +45,17 @@ class DashboardDataSeeder extends Seeder
             ]
         );
 
+        // Ensure PIC User Exists
+        \App\Models\User::firstOrCreate(
+            ['email' => $pic->email],
+            [
+                'name' => $pic->name,
+                'password' => $pic->password,
+                'role' => 'PIC',
+                'pic_id' => $pic->id,
+            ]
+        );
+
         // 3. Generate Claims over last 30 days
         $startDate = now()->subDays(30);
 

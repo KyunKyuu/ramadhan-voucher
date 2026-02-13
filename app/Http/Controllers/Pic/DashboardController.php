@@ -43,7 +43,7 @@ class DashboardController extends Controller
             ->paginate(10, ['*'], 'assigned_page');
 
         $claimedVouchers = $pic->initialVouchers()
-            ->with(['claim.customer', 'merchantVouchers.merchant'])
+            ->with(['claim', 'merchantVouchers.merchant'])
             ->where('status', 'CLAIMED')
             ->latest()
             ->paginate(10, ['*'], 'claimed_page');
@@ -54,7 +54,7 @@ class DashboardController extends Controller
             })
             ->with(['merchantVouchers' => function($q) {
                 $q->where('status', 'REDEEMED')->with('merchant');
-            }, 'claim.customer'])
+            }, 'claim'])
             ->latest()
             ->paginate(10, ['*'], 'redeemed_page');
 
