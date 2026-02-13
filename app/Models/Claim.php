@@ -13,6 +13,7 @@ class Claim extends Model
 
     protected $fillable = [
         'initial_voucher_id',
+        'pic_id', // Added to support manual schema change
         'name',
         'email',
         'phone',
