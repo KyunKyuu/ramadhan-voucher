@@ -57,7 +57,7 @@ class DashboardDataSeeder extends Seeder
             for ($j = 0; $j < $dailyClaimsCount; $j++) {
                 // Create Initial Voucher
                 $voucher = InitialVoucher::create([
-                    'code' => 'SEED-' . $date->format('Ymd') . '-' . $j .Str::random(4),
+                    'code' => 'S' . $date->format('ymd') . '-' . $j . Str::random(3),
                     'batch_id' => $batch->id,
                     'assigned_pic_id' => $pic->id,
                     'status' => 'CLAIMED',

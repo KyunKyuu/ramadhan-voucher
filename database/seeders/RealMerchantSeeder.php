@@ -59,26 +59,30 @@ class RealMerchantSeeder extends Seeder
         ];
 
         foreach ($merchants as $data) {
-            $merchant = Merchant::create([
-                'name' => $data['name'],
-                'slug' => Str::slug($data['name']),
-                'email' => Str::slug($data['name']) . '@example.com', // Dummy email
-                'password' => bcrypt('password'),
-                'is_active' => true,
-                'address' => $data['address'],
-                'website' => $data['website'],
-                'logo_url' => $data['logo_url'],
-                'voucher_template' => 'baju.jpeg', // Default template
-            ]);
+            $merchant = Merchant::firstOrCreate(
+                ['email' => Str::slug($data['name']) . '@example.com'],
+                [
+                    'name' => $data['name'],
+                    'slug' => Str::slug($data['name']),
+                    'password' => bcrypt('password'),
+                    'is_active' => true,
+                    'address' => $data['address'],
+                    'website' => $data['website'],
+                    'logo_url' => $data['logo_url'],
+                    'voucher_template' => 'baju.jpeg', // Default template
+                ]
+            );
 
-            MerchantOffer::create([
-                'merchant_id' => $merchant->id,
-                'title' => $data['offer_title'],
-                'description' => $data['offer_description'],
-                'discount_type' => $data['discount_type'],
-                'discount_value' => $data['discount_value'],
-                'is_active' => true,
-            ]);
+            MerchantOffer::updateOrCreate(
+                ['merchant_id' => $merchant->id],
+                [
+                    'title' => $data['offer_title'],
+                    'description' => $data['offer_description'],
+                    'discount_type' => $data['discount_type'],
+                    'discount_value' => $data['discount_value'],
+                    'is_active' => true,
+                ]
+            );
         }
 
         $this->command->info('Real merchants seeded successfully!');
