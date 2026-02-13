@@ -95,9 +95,10 @@ class ClaimController extends Controller
                 'request' => $request->all(),
             ]);
             
+            // Temporary: Show full error details for debugging
             return back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan sistem (' . class_basename($e) . '). Silakan coba lagi atau hubungi admin.');
+                ->with('error', 'Error Detail: ' . $e->getMessage());
         }
     }
 }

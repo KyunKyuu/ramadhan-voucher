@@ -117,3 +117,37 @@ Route::get('/debug-php', function() {
         'content_length' => $_SERVER['CONTENT_LENGTH'] ?? 'undefined',
     ];
 });
+
+Route::get('/debug-claim', function(App\Services\ClaimService $service) {
+    try {
+        // Needs an existing voucher code that is ASSIGNED and NOT CLAIMED
+        // We will try to find one first
+        $voucher = \App\Models\InitialVoucher::where('status', 'ASSIGNED')->first();
+        
+        if (!$voucher) {
+            return "No ASSIGNED voucher found to test.";
+        }
+        
+        // Ensure PIC exists
+        if (!$voucher->pic) {
+             return "Voucher " . $voucher->code . " has no PIC assigned.";
+        }
+
+        echo "Testing Claim for Code: " . $voucher->code . "<br>";
+        echo "PIC ID: " . $voucher->assigned_pic_id . "<br>";
+        
+        $claim = $service->processClaim(
+            $voucher->code,
+            $voucher->assigned_pic_id, // Correct PIC
+            'Debug User',
+            'debug@example.com',
+            '08123456789', // Phone
+            10000, 20000, 30000 // Amounts
+        );
+        
+        return "SUCCESS! Claim created with token: " . $claim->public_token;
+        
+    } catch (\Throwable $e) {
+        dd($e); // Dump the full error to screen
+    }
+});
