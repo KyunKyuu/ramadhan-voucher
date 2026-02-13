@@ -107,3 +107,13 @@ Route::post('/claim', [ClaimController::class, 'store'])
     ->middleware('throttle:10,1') // 10 requests per minute
     ->name('public.claim.store');
 Route::get('/v/{token}', [VoucherListController::class, 'show'])->name('public.vouchers');
+
+// Debug route - REMOVE AFTER FIX
+Route::get('/debug-php', function() {
+    return [
+        'post_max_size' => ini_get('post_max_size'),
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'memory_limit' => ini_get('memory_limit'),
+        'content_length' => $_SERVER['CONTENT_LENGTH'] ?? 'undefined',
+    ];
+});
