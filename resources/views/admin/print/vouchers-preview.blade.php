@@ -96,7 +96,7 @@
             <div class="voucher">
                 <!-- QR Code Section Only -->
                 <div class="qr-section">
-                    <div class="qr-code" id="qr-{{ $index }}" data-url="https://ramadhanjaya.com/claim/{{ $voucher->code }}"></div>
+                    <div class="qr-code" id="qr-{{ $index }}" data-url="https://ramadhanberjaya.com/claim/{{ $voucher->code }}"></div>
                 </div>
             </div>
         @endforeach

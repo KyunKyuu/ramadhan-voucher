@@ -87,7 +87,7 @@ class ClaimController extends Controller
             return back()
                 ->withInput()
                 ->withErrors($e->errors());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
