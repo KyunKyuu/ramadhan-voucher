@@ -112,58 +112,53 @@
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
-            background: linear-gradient(135deg, rgba(13, 115, 119, 0.95), rgba(106, 76, 147, 0.85)),
-                        url('/images/landing/hero-pattern.png') center/cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            padding: 2rem;
             position: relative;
+            height: 100vh;
+            width: 100%;
             overflow: hidden;
+            display: flex;
+            align-items: flex-end; /* Align content to bottom */
+            justify-content: flex-start; /* Align content to left */
+            color: white;
+            padding: 0;
         }
 
-        .hero::before {
-            content: '';
+        .hero-bg-media {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.2), transparent);
-            border-radius: 50%;
-            top: -250px;
-            right: -250px;
-            animation: float 6s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            /* Placeholder background color while loading */
+            background-color: var(--dark-teal);
         }
 
-        .hero::after {
-            content: '';
+        .hero-overlay {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255, 140, 66, 0.15), transparent);
-            border-radius: 50%;
-            bottom: -200px;
-            left: -200px;
-            animation: float 8s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-30px); }
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+            z-index: 0;
         }
 
         .hero-content {
-            max-width: 800px;
+            position: relative;
             z-index: 1;
+            padding: 3rem 5%;
+            max-width: 800px;
+            text-align: left;
+            margin-bottom: 2rem;
             animation: fadeInUp 1s ease-out;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -173,29 +168,28 @@
 
         .hero h1 {
             font-family: 'Amiri', serif;
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-            line-height: 1.2;
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            line-height: 1.1;
         }
 
         .hero .subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
             font-weight: 300;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .hero .verse {
             font-family: 'Amiri', serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-style: italic;
-            margin-bottom: 2.5rem;
-            padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid var(--primary-gold);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
+            opacity: 0.8;
+            border-left: 3px solid var(--primary-gold);
+            padding-left: 1rem;
+            margin-top: 1.5rem;
         }
 
         .cta-buttons {
@@ -533,22 +527,22 @@
     </nav>
 
     <!-- Hero Section -->
+    <!-- Hero Section -->
     <section class="hero" id="beranda">
+        <!-- Background Media (Mosque Image) -->
+        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" alt="Mosque Background" class="hero-bg-media">
+        
+        <!-- Overlay for better text readability -->
+        <div class="hero-overlay"></div>
+
         <div class="hero-content">
-            <h1>Berbagi Berkah di Bulan Ramadhan</h1>
-            <p class="subtitle">Wujudkan sedekah Anda melalui program voucher digital yang memudahkan berbagi kebaikan</p>
+            <h1>Berbagi Berkah<br>di Bulan Ramadhan</h1>
+            <p class="subtitle">Wujudkan sedekah Anda melalui program voucher digital</p>
             <div class="verse">
-                "Perumpamaan orang yang menginfakkan hartanya di jalan Allah seperti sebutir biji yang menumbuhkan tujuh tangkai, pada setiap tangkai ada seratus biji."
+                "Perumpamaan orang yang menginfakkan hartanya di jalan Allah seperti sebutir biji yang menumbuhkan tujuh tangkai..."
                 <br><small>- QS. Al-Baqarah: 261</small>
             </div>
-            <div class="cta-buttons">
-                <a href="{{ route('login') }}" class="btn btn-primary">
-                    Mulai Bersedekah →
-                </a>
-                <a href="#tentang" class="btn btn-secondary">
-                    Pelajari Lebih Lanjut
-                </a>
-            </div>
+            <!-- CTA Buttons Removed as requested -->
         </div>
     </section>
 
