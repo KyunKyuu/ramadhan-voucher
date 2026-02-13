@@ -100,6 +100,29 @@ class ClaimService
             if ($voucher->assigned_pic_id != $picId) {
                 throw ValidationException::withMessages([
                     'pic_id' => 'Voucher ini tidak di-assign ke PIC yang Anda pilih. Silakan pilih PIC yang benar.',
+                ]);
+            }
+
+            // Generate unique public token
+            $publicToken = $this->generateUniquePublicToken();
+
+            // Create claim record
+            $claim = Claim::create([
+                'initial_voucher_id' => $voucher->id,
+                'pic_id' => $picId, // Save PIC ID as requested/added in DB
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'zakat_fitrah_amount' => $zakatFitrahAmount,
+                'infaq_amount' => $infaqAmount,
+                'sodaqoh_amount' => $sodaqohAmount,
+                'public_token' => $publicToken,
+            ]);
+
+            // Update voucher status to CLAIMED
+            $voucher->update([
+                'status' => 'CLAIMED',
+                'claimed_at' => now(),
             ]);
 
             $minClaimAmount = (float) config('app.min_claim_amount', 35000);
