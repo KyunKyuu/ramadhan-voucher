@@ -50,6 +50,9 @@ class ClaimController extends Controller
     public function store(Request $request)
     {
         try {
+            // Restore validation logic
+            // The QueryException happened because validation was bypassed.
+            // Since we disabled the ValidatePostSize middleware, validation should now run correctly.
             $validated = $request->validate([
                 'code' => 'required|string',
                 'pic_id' => 'required|exists:pics,id',
