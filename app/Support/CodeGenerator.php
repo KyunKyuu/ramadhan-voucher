@@ -35,7 +35,8 @@ class CodeGenerator
      */
     public static function makeToken(int $length = 32): string
     {
-        $bytes = random_bytes($length);
-        return bin2hex($bytes);
+        // bin2hex returns 2 chars per byte, so we need half the bytes
+        $bytes = random_bytes(ceil($length / 2));
+        return substr(bin2hex($bytes), 0, $length);
     }
 }
