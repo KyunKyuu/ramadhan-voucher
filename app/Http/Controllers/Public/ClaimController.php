@@ -49,18 +49,17 @@ class ClaimController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'code' => 'required|string',
-            'pic_id' => 'required|exists:pics,id',
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|max:100',
-            'phone' => 'required|string|max:30',
-            'zakat_fitrah_amount' => 'nullable|numeric|min:0',
-            'infaq_amount' => 'nullable|numeric|min:0',
-            'sodaqoh_amount' => 'nullable|numeric|min:0',
-        ]);
-
         try {
+            $validated = $request->validate([
+                'code' => 'required|string',
+                'pic_id' => 'required|exists:pics,id',
+                'name' => 'required|string|max:100',
+                'email' => 'required|email|max:100',
+                'phone' => 'required|string|max:30',
+                'zakat_fitrah_amount' => 'nullable|numeric|min:0',
+                'infaq_amount' => 'nullable|numeric|min:0',
+                'sodaqoh_amount' => 'nullable|numeric|min:0',
+            ]);
             $zakatFitrahAmount = isset($validated['zakat_fitrah_amount'])
                 ? (float) $validated['zakat_fitrah_amount']
                 : 0;
@@ -88,9 +87,14 @@ class ClaimController extends Controller
                 ->withInput()
                 ->withErrors($e->errors());
         } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Claim Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all(),
+            ]);
+            
             return back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
+                ->with('error', 'Terjadi kesalahan sistem (' . class_basename($e) . '). Silakan coba lagi atau hubungi admin.');
         }
     }
 }
