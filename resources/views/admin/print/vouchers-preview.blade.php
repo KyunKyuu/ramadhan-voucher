@@ -6,17 +6,19 @@
     <title>Print Vouchers - Ramadhan Berkah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- QR Code Library - Client Side -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         @media print {
             @page {
                 size: A4;
-                margin: 10mm;
+                margin: 0; /* Minimize margins for full page use */
             }
             
             body {
                 print-color-adjust: exact;
                 -webkit-print-color-adjust: exact;
+                margin: 0;
+                padding: 10mm;
             }
             
             .no-print {
@@ -27,64 +29,45 @@
                 page-break-inside: avoid;
             }
             
-            /* Force page break after every 4 vouchers */
-            .voucher:nth-child(4n) {
+            /* Force page break after every 2 vouchers (A4 fits ~2 of 134mm height) */
+            .voucher:nth-child(2n) {
                 page-break-after: always;
             }
         }
         
         .voucher {
-            width: 100%;
-            max-width: 190mm;
-            height: 60mm;
-            border: 2px solid #0d7377;
-            border-radius: 8px;
-            margin-bottom: 5mm;
-            display: flex;
-            overflow: hidden;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        }
-        
-        .text-section {
-            flex: 1;
-            padding: 12mm;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            width: 190mm;
+            height: 134mm; /* Adjusted based on 1280x905px image ratio */
             position: relative;
-        }
-        
-        .text-section::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 10mm;
-            bottom: 10mm;
-            width: 2px;
-            background-image: repeating-linear-gradient(
-                to bottom,
-                #0d7377,
-                #0d7377 4px,
-                transparent 4px,
-                transparent 8px
-            );
+            margin-bottom: 5mm;
+            background-image: url('/images/voucher/utama.jpeg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            /* Border optional if image defines edges, keeping usually helps cut guides */
+            border: 1px dashed #ccc; 
+            overflow: hidden;
         }
         
         .qr-section {
-            width: 60mm;
+            position: absolute;
+            bottom: 4mm; /* Adjusted for typical 'box' placement */
+            right: 4mm;
+            width: 28mm;
+            height: 28mm;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: white;
-            padding: 8mm;
+            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white bg for contrast */
+            padding: 2mm;
+            border-radius: 4px;
         }
         
         .qr-code {
-            width: 44mm;
-            height: 44mm;
+            width: 100%;
+            height: 100%;
         }
 
-        .qr-code canvas {
+        .qr-code img, .qr-code canvas {
             width: 100% !important;
             height: 100% !important;
         }
@@ -95,7 +78,7 @@
     <div class="no-print max-w-4xl mx-auto mb-4 bg-white rounded-lg shadow p-4 flex items-center justify-between">
         <div>
             <h1 class="text-xl font-bold text-gray-900">Print Preview - {{ $vouchers->count() }} Voucher</h1>
-            <p class="text-sm text-gray-600">QR Code akan muncul dalam beberapa detik...</p>
+            <p class="text-sm text-gray-600">Pastikan background graphics diaktifkan saat print.</p>
         </div>
         <div class="space-x-2">
             <button onclick="window.print()" class="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium">
@@ -108,35 +91,10 @@
     </div>
 
     <!-- Vouchers Container -->
-    <div class="max-w-4xl mx-auto space-y-2">
+    <div class="max-w-[210mm] mx-auto space-y-4">
         @foreach($vouchers as $index => $voucher)
             <div class="voucher">
-                <!-- Left: Text Section -->
-                <div class="text-section">
-                    <div class="flex items-center mb-2">
-                        <div class="text-3xl mr-2 text-yellow-600">☪</div>
-                        <div>
-                            <div class="text-lg font-bold text-teal-700">Voucher Ramadhan</div>
-                            <div class="text-xs text-gray-600">1446 H</div>
-                        </div>
-                    </div>
-                    
-                    <div class="w-12 h-1 bg-gradient-to-r from-teal-700 to-yellow-600 rounded my-2"></div>
-                    
-                    <div class="text-base font-semibold text-teal-700 mb-2">Scan QR Code untuk Klaim Voucher</div>
-                    
-                    <div class="text-xs text-gray-500">
-                        @if($voucher->pic)
-                            <strong>PIC:</strong> {{ $voucher->pic->name }}
-                        @endif
-                        @if($voucher->batch)
-                            @if($voucher->pic) | @endif
-                            <strong>Batch:</strong> {{ $voucher->batch->name }}
-                        @endif
-                    </div>
-                </div>
-                
-                <!-- Right: QR Code Section -->
+                <!-- QR Code Section Only -->
                 <div class="qr-section">
                     <div class="qr-code" id="qr-{{ $index }}" data-url="{{ config('app.url') }}/claim/{{ $voucher->code }}"></div>
                 </div>
@@ -145,78 +103,27 @@
     </div>
 
     <script>
-        console.log('=== QR Code Generation Debug ===');
-        console.log('Page loaded, starting QR generation...');
-        
-        // Check if QRCode library is loaded
-        if (typeof QRCode === 'undefined') {
-            console.error('ERROR: QRCode library not loaded!');
-            alert('QRCode library gagal dimuat. Periksa koneksi internet.');
-        } else {
-            console.log('✓ QRCode library loaded successfully');
-        }
-        
         // Generate QR codes using JavaScript (client-side)
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, finding QR elements...');
-            
             const qrElements = document.querySelectorAll('[id^="qr-"]');
-            console.log('Found ' + qrElements.length + ' QR elements');
             
-            if (qrElements.length === 0) {
-                console.error('ERROR: No QR elements found!');
-                return;
-            }
+            if (qrElements.length === 0) return;
             
-            qrElements.forEach(function(element, index) {
+            qrElements.forEach(function(element) {
                 const url = element.getAttribute('data-url');
-                console.log('Generating QR #' + index + ' for URL: ' + url);
-                
                 try {
-                    // Generate QR code
-                    const qrcode = new QRCode(element, {
+                    new QRCode(element, {
                         text: url,
-                        width: 165,
-                        height: 165,
+                        width: 128,
+                        height: 128,
                         colorDark: "#000000",
                         colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.H
+                        correctLevel: QRCode.CorrectLevel.M
                     });
-                    
-                    console.log('✓ QR #' + index + ' generated successfully');
-                    
-                    // Check if canvas was created
-                    const canvas = element.querySelector('canvas');
-                    const img = element.querySelector('img');
-                    
-                    if (canvas) {
-                        console.log('✓ Canvas created for QR #' + index);
-                    } else if (img) {
-                        console.log('✓ Image created for QR #' + index);
-                    } else {
-                        console.error('✗ No canvas or image found for QR #' + index);
-                    }
-                    
                 } catch (error) {
-                    console.error('ERROR generating QR #' + index + ':', error);
-                    element.innerHTML = '<div style="color: red; font-size: 12px;">Error: ' + error.message + '</div>';
+                    console.error('Error generating QR:', error);
                 }
             });
-            
-            console.log('=== QR Generation Complete ===');
-            console.log('Check browser console for any errors');
-            
-            // Show success message
-            setTimeout(function() {
-                const successMsg = document.createElement('div');
-                successMsg.className = 'no-print fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg';
-                successMsg.innerHTML = '✓ ' + qrElements.length + ' QR codes generated!';
-                document.body.appendChild(successMsg);
-                
-                setTimeout(function() {
-                    successMsg.remove();
-                }, 3000);
-            }, 1000);
         });
     </script>
 </body>
