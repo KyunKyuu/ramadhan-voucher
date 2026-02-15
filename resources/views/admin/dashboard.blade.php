@@ -65,6 +65,60 @@
         </div>
     </div>
 
+    <!-- Fund Verification Stats -->
+    <h3 class="text-lg font-semibold text-gray-900 mt-8 mb-4">Status Verifikasi Dana (Reconcile)</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Verified -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-600">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Dana Terverifikasi</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($fundStats['verified'], 0, ',', '.') }}</p>
+                    <p class="text-xs text-green-600 mt-1">{{ number_format($fundStats['verified_count']) }} Transaksi</p>
+                </div>
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">✅</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Pending Verifikasi</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($fundStats['pending'], 0, ',', '.') }}</p>
+                    <p class="text-xs text-yellow-600 mt-1">{{ number_format($fundStats['pending_count']) }} Transaksi</p>
+                </div>
+                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">⏳</span>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.fund-verification.index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Verifikasi Sekarang &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Anomaly -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Anomali (Selisih/Masalah)</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($fundStats['anomaly'], 0, ',', '.') }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ number_format($fundStats['anomaly_count']) }} Transaksi</p>
+                </div>
+                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">⚠️</span>
+                </div>
+            </div>
+            @if($fundStats['anomaly_count'] > 0)
+            <div class="mt-4">
+                <a href="{{ route('admin.claims.index') }}" class="text-sm text-red-600 hover:text-red-800 font-medium">Lihat Detail &rarr;</a>
+            </div>
+            @endif
+        </div>
+    </div>
+
     <!-- Chart Section -->
     <div class="bg-white rounded-lg shadow p-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Tren Penyaluran Harian (30 Hari Terakhir)</h3>

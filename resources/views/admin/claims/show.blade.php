@@ -65,6 +65,34 @@
                     Infaq: Rp {{ number_format($claim->infaq_amount ?? 0, 0, ',', '.') }},
                     Sodaqoh: Rp {{ number_format($claim->sodaqoh_amount ?? 0, 0, ',', '.') }}
                 </p>
+                </p>
+            </div>
+            <div class="md:col-span-2 border-t pt-4 mt-2">
+                <label class="block text-sm font-medium text-gray-600 mb-2">Status Verifikasi Dana</label>
+                <div class="flex items-center space-x-4">
+                    @if($claim->verification_status == 'VERIFIED')
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Termasuk dalam setoran terverifikasi
+                        </span>
+                        @if($claim->verified_at)
+                            <span class="text-sm text-gray-500">pada {{ $claim->verified_at->format('d M Y H:i') }}</span>
+                        @endif
+                    @elseif($claim->verification_status == 'ANOMALY')
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            Anomali: {{ $claim->verification_note }}
+                        </span>
+                    @else
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                            Belum Diverifikasi
+                        </span>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

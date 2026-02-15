@@ -21,12 +21,16 @@ class Claim extends Model
         'infaq_amount',
         'sodaqoh_amount',
         'public_token',
+        'verification_status',
+        'verification_note',
+        'verified_at',
     ];
 
     protected $casts = [
         'zakat_fitrah_amount' => 'decimal:2',
         'infaq_amount' => 'decimal:2',
         'sodaqoh_amount' => 'decimal:2',
+        'verified_at' => 'datetime',
     ];
 
     /**

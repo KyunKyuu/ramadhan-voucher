@@ -92,6 +92,22 @@ class DashboardController extends Controller
             $chartData['sodaqoh'][] = $dayStat ? $dayStat->sodaqoh : 0;
         }
 
-        return view('admin.dashboard', compact('kpis', 'recentClaims', 'recentRedemptions', 'donations', 'chartLabels', 'chartData'));
+        // Fund Verification Stats
+        $fundStats = [
+            'verified' => Claim::where('verification_status', 'VERIFIED')
+                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + infaq_amount + sodaqoh_amount')),
+            
+            'pending' => Claim::where('verification_status', 'PENDING')
+                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + infaq_amount + sodaqoh_amount')),
+            
+            'anomaly' => Claim::where('verification_status', 'ANOMALY')
+                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + infaq_amount + sodaqoh_amount')),
+                
+            'verified_count' => Claim::where('verification_status', 'VERIFIED')->count(),
+            'pending_count' => Claim::where('verification_status', 'PENDING')->count(),
+            'anomaly_count' => Claim::where('verification_status', 'ANOMALY')->count(),
+        ];
+
+        return view('admin.dashboard', compact('kpis', 'recentClaims', 'recentRedemptions', 'donations', 'chartLabels', 'chartData', 'fundStats'));
     }
 }

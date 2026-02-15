@@ -67,6 +67,11 @@ Route::middleware(['auth', 'role:SUPERADMIN'])->prefix('admin')->name('admin.')-
         Route::get('/print/pdf', [InitialVoucherPrintController::class, 'pdf'])->name('print.pdf');
         Route::get('/print/preview', [InitialVoucherPrintController::class, 'printPreview'])->name('print.preview');
     });
+    // Fund Verification Routes
+    Route::get('/fund-verification', [App\Http\Controllers\Admin\FundVerificationController::class, 'index'])->name('admin.fund-verification.index');
+    Route::get('/fund-verification/{date}', [App\Http\Controllers\Admin\FundVerificationController::class, 'show'])->name('admin.fund-verification.show');
+    Route::post('/fund-verification/{date}/verify', [App\Http\Controllers\Admin\FundVerificationController::class, 'verifyDay'])->name('admin.fund-verification.verify-day');
+    Route::post('/fund-verification/{claim}/anomaly', [App\Http\Controllers\Admin\FundVerificationController::class, 'markAnomaly'])->name('admin.fund-verification.mark-anomaly');
 });
 
 // Merchant Routes - Protected by auth and role:MERCHANT middleware

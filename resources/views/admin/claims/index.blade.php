@@ -75,6 +75,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">PIC</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Donation</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fund Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Claimed At</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
@@ -93,6 +94,21 @@
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $claim->initialVoucher->batch->name ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm font-semibold text-gray-900">
                                 Rp {{ number_format($claim->total_donation_amount, 0, ',', '.') }}
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($claim->verification_status == 'VERIFIED')
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                        Verified
+                                    </span>
+                                @elseif($claim->verification_status == 'ANOMALY')
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                        Anomaly
+                                    </span>
+                                @else
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        Pending
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $claim->created_at->format('d M Y H:i') }}</td>
                             <td class="px-6 py-4">
