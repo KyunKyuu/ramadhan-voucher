@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ramadhan Berkah - Program Voucher Sedekah</title>
+    <title>{{ config('app.name') }} - Program Voucher Sedekah</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -60,11 +60,7 @@
             gap: 0.5rem;
         }
 
-        .logo::before {
-            content: '☪';
-            color: var(--primary-gold);
-            font-size: 2rem;
-        }
+
 
         .nav-links {
             display: flex;
@@ -517,7 +513,14 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo">Ramadhan Berkah</div>
+        <div class="logo">
+            @if(config('app.logo') && file_exists(public_path(config('app.logo'))))
+                <img src="{{ asset(config('app.logo')) }}" alt="Logo" class="h-10 w-auto">
+            @else
+                <span class="text-3xl text-yellow-500 mr-2">☪</span>
+            @endif
+            {{ config('app.name') }}
+        </div>
         <ul class="nav-links">
             <li><a href="#beranda">Beranda</a></li>
             <li><a href="#tentang">Tentang</a></li>
@@ -549,7 +552,7 @@
     <!-- Features Section -->
     <section class="features" id="fitur">
         <div class="section-title fade-in">
-            <h2>Mengapa Ramadhan Berkah?</h2>
+            <h2>Mengapa {{ config('app.name') }}?</h2>
             <p>Platform sedekah digital yang mudah, aman, dan terpercaya</p>
         </div>
         <div class="features-grid">
@@ -596,7 +599,7 @@
             <div class="about-text fade-in">
                 <h2>Tentang Program Kami</h2>
                 <p>
-                    Ramadhan Berkah adalah platform digital yang memfasilitasi penyaluran sedekah melalui sistem voucher elektronik. 
+                    {{ config('app.name') }} adalah platform digital yang memfasilitasi penyaluran sedekah melalui sistem voucher elektronik. 
                     Kami percaya bahwa teknologi dapat mempermudah berbagi kebaikan dan menjangkau lebih banyak orang yang membutuhkan.
                 </p>
                 <p>
@@ -633,7 +636,14 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="logo" style="justify-content: center; margin-bottom: 2rem;">Ramadhan Berkah</div>
+            <div class="logo" style="justify-content: center; margin-bottom: 2rem;">
+                @if(config('app.logo') && file_exists(public_path(config('app.logo'))))
+                    <img src="{{ asset(config('app.logo')) }}" alt="Logo" class="h-10 w-auto mr-2">
+                @else
+                    <span class="text-3xl text-yellow-500 mr-2">☪</span>
+                @endif
+                {{ config('app.name') }}
+            </div>
             <div class="footer-links">
                 <a href="#beranda">Beranda</a>
                 <a href="#tentang">Tentang</a>
@@ -641,7 +651,7 @@
                 <a href="{{ route('login') }}">Masuk</a>
             </div>
             <div class="copyright">
-                &copy; {{ date('Y') }} Ramadhan Berkah. Semua hak dilindungi.
+                &copy; {{ date('Y') }} {{ config('app.name') }}. Semua hak dilindungi.
             </div>
         </div>
     </footer>

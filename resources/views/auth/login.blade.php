@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Ramadhan Berkah</title>
+    <title>Login - {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -205,8 +205,14 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <div class="icon">☪</div>
-            <h1>Ramadhan Berkah</h1>
+            <div class="mb-4">
+                @if(config('app.logo') && file_exists(public_path(config('app.logo'))))
+                    <img src="{{ asset(config('app.logo')) }}" alt="Logo" class="h-20 w-auto mx-auto">
+                @else
+                    <div class="icon">☪</div>
+                @endif
+            </div>
+            <h1>{{ config('app.name') }}</h1>
             <p>Masuk ke akun Anda</p>
         </div>
         <div class="login-body">

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Panel') - Ramadhan Berkah</title>
+    <title>@yield('title', 'Admin Panel') - {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,8 +44,12 @@
             <!-- Logo/Brand -->
             <div class="flex items-center justify-between h-14 px-4 bg-teal-800 border-b border-teal-600 flex-shrink-0">
                 <div class="flex items-center space-x-2">
-                    <span class="text-xl">☪</span>
-                    <h1 class="text-base font-bold">Ramadhan Berkah</h1>
+                    @if(config('app.logo') && file_exists(public_path(config('app.logo'))))
+                        <img src="{{ asset(config('app.logo')) }}" alt="Logo" class="h-8 w-auto">
+                    @else
+                        <span class="text-xl">☪</span>
+                    @endif
+                    <h1 class="text-base font-bold">{{ config('app.name') }}</h1>
                 </div>
                 <button id="closeSidebar" class="md:hidden text-white hover:text-gray-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

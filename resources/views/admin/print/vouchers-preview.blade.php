@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Vouchers - Ramadhan Berkah</title>
+    <title>Print Vouchers - {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- QR Code Library - Client Side -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

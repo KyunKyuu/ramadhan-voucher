@@ -96,12 +96,13 @@ class DashboardController extends Controller
         }
 
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
-            foreach ($vouchers as $voucher) {
+            foreach ($vouchers as $index => $voucher) {
                 $pdf = Pdf::loadView('pic.print.single-voucher', compact('voucher'))
                     ->setPaper('a4', 'landscape');
                 
                 $pdfContent = $pdf->output();
-                $zip->addFromString('voucher_' . $voucher->code . '.pdf', $pdfContent);
+                $filename = 'voucher_' . ($index + 1) . '_' . $voucher->code . '.pdf';
+                $zip->addFromString($filename, $pdfContent);
             }
             $zip->close();
         } else {
