@@ -152,10 +152,19 @@
                 </div>
 
                 <div class="border-t pt-4 mt-4">
-                    <label for="logo_url" class="block text-sm font-medium text-gray-700 mb-1">Logo URL</label>
-                    <input type="url" name="logo_url" id="logo_url" value="{{ old('logo_url', $merchant->logo_url) }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('logo_url') border-red-500 @enderror"
-                        placeholder="https://example.com/logo.png">
+                    <label for="logo_url" class="block text-sm font-medium text-gray-700 mb-1">Logo Merchant</label>
+                    
+                    @if($merchant->logo_url)
+                        <div class="mb-2">
+                            <img src="{{ $merchant->logo_url }}" 
+                                 alt="Current Logo" class="h-20 w-auto object-contain border rounded p-1">
+                            <p class="text-xs text-gray-500 mt-1">Logo saat ini</p>
+                        </div>
+                    @endif
+
+                    <input type="file" name="logo_url" id="logo_url" accept="image/*"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('logo_url') border-red-500 @enderror">
+                    <p class="text-xs text-gray-500 mt-1">Upload logo baru untuk mengganti. Format: JPG, PNG. Max: 2MB.</p>
                     @error('logo_url')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
@@ -169,7 +178,7 @@
                                 {{ old('voucher_template', $merchant->voucher_template) == $template ? 'checked' : '' }}>
                             
                             <div class="border-2 border-transparent peer-checked:border-blue-500 rounded-lg overflow-hidden hover:opacity-90 transition-all">
-                                <img src="{{ asset('images/voucher/' . $template) }}" alt="{{ $template }}" class="w-full h-auto object-cover">
+                                <img src="{{ asset('images/voucher/' . $template) }}?v={{ time() }}" alt="{{ $template }}" class="w-full h-auto object-cover">
                             </div>
                             
                             <div class="absolute top-2 right-2 bg-blue-500 text-white p-1 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity">

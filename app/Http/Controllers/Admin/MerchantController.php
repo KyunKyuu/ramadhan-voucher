@@ -42,7 +42,7 @@ class MerchantController extends Controller
             'slug' => 'nullable|string|max:100|unique:merchants,slug',
             'email' => 'required|email|max:255|unique:merchants,email',
             'password' => 'required|string|min:8|confirmed',
-            'logo_url' => 'nullable|url|max:255',
+            'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'boolean',
             'voucher_template' => 'nullable|string',
             'address' => 'nullable|string',
@@ -73,6 +73,14 @@ class MerchantController extends Controller
         
         // Remove offer fields from merchant data
         unset($validated['offer_title'], $validated['offer_description'], $validated['discount_value'], $validated['discount_type'], $validated['product_images']);
+
+        // Handle Logo Upload
+        if ($request->hasFile('logo_url')) {
+            $logo = $request->file('logo_url');
+            $filename = time() . '_' . uniqid() . '_logo.' . $logo->getClientOriginalExtension();
+            $logo->move(public_path('images/merchants'), $filename);
+            $validated['logo_url'] = 'images/merchants/' . $filename;
+        }
 
         $merchant = Merchant::create($validated);
 
@@ -131,7 +139,7 @@ class MerchantController extends Controller
             'slug' => 'nullable|string|max:100|unique:merchants,slug,' . $merchant->id,
             'email' => 'required|email|max:255|unique:merchants,email,' . $merchant->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'logo_url' => 'nullable|url|max:255',
+            'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'boolean',
             'voucher_template' => 'nullable|string',
             'address' => 'nullable|string',
@@ -168,6 +176,19 @@ class MerchantController extends Controller
 
         // Remove offer fields from merchant data
         unset($validated['offer_title'], $validated['offer_description'], $validated['discount_value'], $validated['discount_type'], $validated['product_images']);
+
+        // Handle Logo Upload
+        if ($request->hasFile('logo_url')) {
+            $logo = $request->file('logo_url');
+            $filename = time() . '_' . uniqid() . '_logo.' . $logo->getClientOriginalExtension();
+            $logo->move(public_path('images/merchants'), $filename);
+            $validated['logo_url'] = 'images/merchants/' . $filename;
+            
+            // Optional: Delete old logo if it exists and is not an external URL
+            if ($merchant->logo_url && file_exists(public_path($merchant->logo_url))) {
+                @unlink(public_path($merchant->logo_url));
+            }
+        }
 
         $merchant->update($validated);
 

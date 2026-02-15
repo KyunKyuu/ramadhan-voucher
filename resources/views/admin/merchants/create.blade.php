@@ -9,7 +9,7 @@
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <form action="{{ route('admin.merchants.store') }}" method="POST">
+        <form action="{{ route('admin.merchants.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="space-y-4">
@@ -134,10 +134,10 @@
                 </div>
 
                 <div class="border-t pt-4 mt-4">
-                    <label for="logo_url" class="block text-sm font-medium text-gray-700 mb-1">Logo URL</label>
-                    <input type="url" name="logo_url" id="logo_url" value="{{ old('logo_url') }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('logo_url') border-red-500 @enderror"
-                        placeholder="https://example.com/logo.png">
+                    <label for="logo_url" class="block text-sm font-medium text-gray-700 mb-1">Logo Merchant</label>
+                    <input type="file" name="logo_url" id="logo_url" accept="image/*"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('logo_url') border-red-500 @enderror">
+                    <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG. Max: 2MB.</p>
                     @error('logo_url')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
@@ -151,7 +151,7 @@
                                 {{ old('voucher_template') == $template ? 'checked' : ($loop->first ? 'checked' : '') }}>
                             
                             <div class="border-2 border-transparent peer-checked:border-blue-500 rounded-lg overflow-hidden hover:opacity-90 transition-all">
-                                <img src="{{ asset('images/voucher/' . $template) }}" alt="{{ $template }}" class="w-full h-auto object-cover">
+                                <img src="{{ asset('images/voucher/' . $template) }}?v={{ time() }}" alt="{{ $template }}" class="w-full h-auto object-cover">
                             </div>
                             
                             <div class="absolute top-2 right-2 bg-blue-500 text-white p-1 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity">

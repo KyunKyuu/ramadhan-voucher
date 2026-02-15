@@ -42,6 +42,23 @@ class Merchant extends Model
     ];
 
     /**
+     * Get the logo URL.
+     * If it's a full URL, return it. Otherwise, assume it's a local file and wrap with asset().
+     */
+    public function getLogoUrlAttribute($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+
+        return asset($value);
+    }
+
+    /**
      * Get the offer for this merchant.
      */
     public function offer(): HasOne

@@ -256,7 +256,7 @@
         
         // Set background image
         const voucherContainer = document.getElementById('voucherContainer');
-        const bgUrl = "{{ asset('images/voucher/') }}/" + (template || 'baju.jpeg');
+        const bgUrl = "{{ asset('images/voucher/') }}/" + (template || 'baju.jpeg') + "?v={{ time() }}";
         voucherContainer.style.backgroundImage = `url('${bgUrl}')`;
 
         // Generate new QR

@@ -40,7 +40,7 @@
             height: 134mm; /* Adjusted based on 1280x905px image ratio */
             position: relative;
             margin-bottom: 5mm;
-            background-image: url('/images/voucher/utama.jpeg');
+            background-image: url("{{ asset('/images/voucher/utama.jpeg') }}?v={{ time() }}");
             background-size: cover;
             background-repeat: no-repeat;
             /* Border optional if image defines edges, keeping usually helps cut guides */
