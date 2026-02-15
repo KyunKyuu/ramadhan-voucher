@@ -50,14 +50,16 @@
         
         .qr-section {
             position: absolute;
-            bottom: 4mm; /* Adjusted for typical 'box' placement */
+            bottom: 4mm;
             right: 4mm;
-            width: 28mm;
-            height: 28mm;
+            width: 32mm; /* Increased width slightly */
+            height: auto;
+            min-height: 28mm;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white bg for contrast */
+            background: rgba(255, 255, 255, 0.95);
             padding: 2mm;
             border-radius: 4px;
         }
@@ -97,6 +99,9 @@
                 <!-- QR Code Section Only -->
                 <div class="qr-section">
                     <div class="qr-code" id="qr-{{ $index }}" data-url="https://ramadhanberjaya.com/claim/{{ $voucher->code }}"></div>
+                    <div class="text-[8px] text-center font-bold leading-tight mt-1">
+                        ramadhanberjaya.com<br>/claim/{{ $voucher->code }}
+                    </div>
                 </div>
             </div>
         @endforeach
