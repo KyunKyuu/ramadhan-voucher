@@ -6,6 +6,7 @@ use App\Models\Claim;
 use App\Models\InitialVoucher;
 use App\Support\CodeGenerator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class ClaimService
@@ -67,8 +68,12 @@ class ClaimService
      * @param string $email
      * @param string|null $phone
      * @param float $zakatFitrahAmount
+     * @param float $zakatMalAmount
      * @param float $infaqAmount
      * @param float $sodaqohAmount
+     * @param string $paymentMethod
+     * @param string|null $transferDestination
+     * @param string|null $transferProofPath
      * @return Claim
      * @throws ValidationException
      */
@@ -79,11 +84,28 @@ class ClaimService
         string $email,
         ?string $phone = null,
         float $zakatFitrahAmount = 0,
+        float $zakatMalAmount = 0,
         float $infaqAmount = 0,
-        float $sodaqohAmount = 0
+        float $sodaqohAmount = 0,
+        string $paymentMethod = 'cash',
+        ?string $transferDestination = null,
+        ?string $transferProofPath = null
     ): Claim
     {
-        return DB::transaction(function () use ($code, $picId, $name, $email, $phone, $zakatFitrahAmount, $infaqAmount, $sodaqohAmount) {
+        return DB::transaction(function () use (
+            $code,
+            $picId,
+            $name,
+            $email,
+            $phone,
+            $zakatFitrahAmount,
+            $zakatMalAmount,
+            $infaqAmount,
+            $sodaqohAmount,
+            $paymentMethod,
+            $transferDestination,
+            $transferProofPath
+        ) {
             // Lock the voucher row for update
             $voucher = InitialVoucher::where('code', $code)
                 ->lockForUpdate()
@@ -105,19 +127,30 @@ class ClaimService
 
             // Generate unique public token
             $publicToken = $this->generateUniquePublicToken();
+            $isTransfer = $paymentMethod === 'transfer';
 
             // Create claim record
-            $claim = Claim::create([
+            $claimPayload = [
                 'initial_voucher_id' => $voucher->id,
-                'pic_id' => $picId, // Save PIC ID as requested/added in DB
                 'name' => $name,
                 'email' => $email,
                 'phone' => $phone,
                 'zakat_fitrah_amount' => $zakatFitrahAmount,
+                'zakat_mal_amount' => $zakatMalAmount,
                 'infaq_amount' => $infaqAmount,
                 'sodaqoh_amount' => $sodaqohAmount,
+                'payment_method' => $paymentMethod,
+                'transfer_destination' => $isTransfer ? $transferDestination : null,
+                'transfer_proof_path' => $isTransfer ? $transferProofPath : null,
                 'public_token' => $publicToken,
-            ]);
+            ];
+
+            // Backward/forward compatible for environments where claims.pic_id may or may not exist.
+            if (Schema::hasColumn('claims', 'pic_id')) {
+                $claimPayload['pic_id'] = $picId;
+            }
+
+            $claim = Claim::create($claimPayload);
 
             // Update voucher status to CLAIMED
             $voucher->update([
@@ -126,7 +159,7 @@ class ClaimService
             ]);
 
             $minClaimAmount = (float) config('app.min_claim_amount', 35000);
-            $totalAmount = $zakatFitrahAmount + $infaqAmount + $sodaqohAmount;
+            $totalAmount = $zakatFitrahAmount + $zakatMalAmount + $infaqAmount + $sodaqohAmount;
 
             // Generate merchant vouchers only if minimum total is met
             if ($totalAmount >= $minClaimAmount) {

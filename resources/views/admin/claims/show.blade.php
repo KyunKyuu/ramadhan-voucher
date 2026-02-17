@@ -32,6 +32,26 @@
                 <p class="text-lg text-gray-900">{{ $claim->phone ?? '-' }}</p>
             </div>
             <div>
+                <label class="block text-sm font-medium text-gray-600">Metode Pembayaran</label>
+                <p class="text-lg text-gray-900">{{ strtoupper($claim->payment_method ?? 'cash') }}</p>
+            </div>
+            @if(($claim->payment_method ?? 'cash') === 'transfer')
+                <div>
+                    <label class="block text-sm font-medium text-gray-600">Transfer ke</label>
+                    <p class="text-lg text-gray-900">{{ $claim->transfer_destination ?? '-' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-600">Bukti Transfer</label>
+                    @if($claim->transfer_proof_path)
+                        <a href="{{ asset('storage/' . $claim->transfer_proof_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+                            Lihat Bukti Transfer →
+                        </a>
+                    @else
+                        <p class="text-lg text-gray-900">-</p>
+                    @endif
+                </div>
+            @endif
+            <div>
                 <label class="block text-sm font-medium text-gray-600">Voucher Code</label>
                 <p class="text-lg font-mono bg-gray-100 px-3 py-1 rounded inline-block">{{ $claim->initialVoucher->code ?? 'N/A' }}</p>
             </div>
@@ -62,9 +82,9 @@
                 <label class="block text-sm font-medium text-gray-600">Nominal Penyaluran</label>
                 <p class="text-lg text-gray-900">
                     Zakat Fitrah: Rp {{ number_format($claim->zakat_fitrah_amount ?? 0, 0, ',', '.') }},
+                    Zakat Mal: Rp {{ number_format($claim->zakat_mal_amount ?? 0, 0, ',', '.') }},
                     Infaq: Rp {{ number_format($claim->infaq_amount ?? 0, 0, ',', '.') }},
                     Sodaqoh: Rp {{ number_format($claim->sodaqoh_amount ?? 0, 0, ',', '.') }}
-                </p>
                 </p>
             </div>
             <div class="md:col-span-2 border-t pt-4 mt-2">

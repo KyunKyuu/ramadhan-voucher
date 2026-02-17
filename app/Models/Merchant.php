@@ -31,6 +31,8 @@ class Merchant extends Model
         'voucher_template',
         'address',
         'website',
+        'google_maps_link',
+        'admin_phone',
     ];
 
     protected $hidden = [

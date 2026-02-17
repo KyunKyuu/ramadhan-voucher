@@ -7,6 +7,7 @@
     @php
         $minClaimAmount = (float) config('app.min_claim_amount', 35000);
         $totalDonation = (float) ($claim->zakat_fitrah_amount ?? 0)
+            + (float) ($claim->zakat_mal_amount ?? 0)
             + (float) ($claim->infaq_amount ?? 0)
             + (float) ($claim->sodaqoh_amount ?? 0);
         $eligible = $totalDonation >= $minClaimAmount;
@@ -46,7 +47,8 @@
                 <div>
                     <p class="text-gray-500">Nominal Penyaluran</p>
                     <p class="font-semibold text-gray-900">
-                        Zakat: Rp {{ number_format($claim->zakat_fitrah_amount ?? 0, 0, ',', '.') }},
+                        Zakat Fitrah: Rp {{ number_format($claim->zakat_fitrah_amount ?? 0, 0, ',', '.') }},
+                        Zakat Mal: Rp {{ number_format($claim->zakat_mal_amount ?? 0, 0, ',', '.') }},
                         Infaq: Rp {{ number_format($claim->infaq_amount ?? 0, 0, ',', '.') }},
                         Sodaqoh: Rp {{ number_format($claim->sodaqoh_amount ?? 0, 0, ',', '.') }}
                     </p>
@@ -213,11 +215,17 @@
                         </svg>
                         <span id="detailAddress"></span>
                     </p>
+                    <a href="#" target="_blank" rel="noopener noreferrer" id="detailGoogleMaps" class="text-sm text-blue-600 hover:underline mt-1 hidden">
+                        lihat di googgle maps
+                    </a>
                     <a href="#" target="_blank" id="detailWebsite" class="text-sm text-blue-600 hover:underline flex items-center mt-1">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                         </svg>
                         <span id="detailWebsiteText"></span>
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" id="detailWhatsappButton" class="inline-flex items-center justify-center mt-3 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 hidden">
+                        WA Hubungi Admin
                     </a>
                 </div>
             </div>
@@ -281,6 +289,34 @@
         document.getElementById('qrModal').classList.add('hidden');
     }
 
+    function ensureHttpPrefix(url) {
+        if (!url) {
+            return '';
+        }
+        return url.startsWith('http://') || url.startsWith('https://')
+            ? url
+            : 'https://' + url;
+    }
+
+    function normalizeWhatsappNumber(rawPhone) {
+        if (!rawPhone) {
+            return '';
+        }
+
+        let digits = String(rawPhone).replace(/\D/g, '');
+        if (!digits) {
+            return '';
+        }
+
+        if (digits.startsWith('0')) {
+            digits = '62' + digits.slice(1);
+        } else if (digits.startsWith('8')) {
+            digits = '62' + digits;
+        }
+
+        return digits;
+    }
+
     function openDetailModal(merchant) {
         // Basic Info
         document.getElementById('detailMerchantName').textContent = merchant.name;
@@ -299,16 +335,36 @@
             addressContainer.classList.remove('flex');
         }
 
+        // Google Maps
+        const googleMapsEl = document.getElementById('detailGoogleMaps');
+        if (merchant.google_maps_link) {
+            googleMapsEl.href = ensureHttpPrefix(merchant.google_maps_link);
+            googleMapsEl.classList.remove('hidden');
+        } else {
+            googleMapsEl.classList.add('hidden');
+        }
+
         // Website
         const websiteEl = document.getElementById('detailWebsite');
         if (merchant.website) {
-            websiteEl.href = merchant.website.startsWith('http') ? merchant.website : 'https://' + merchant.website;
+            websiteEl.href = ensureHttpPrefix(merchant.website);
             document.getElementById('detailWebsiteText').textContent = merchant.website;
             websiteEl.classList.remove('hidden');
             websiteEl.classList.add('flex');
         } else {
             websiteEl.classList.add('hidden');
             websiteEl.classList.remove('flex');
+        }
+
+        // WhatsApp Admin
+        const whatsappEl = document.getElementById('detailWhatsappButton');
+        const waNumber = normalizeWhatsappNumber(merchant.admin_phone);
+        if (waNumber) {
+            const waText = encodeURIComponent(`Halo admin ${merchant.name}, saya ingin tanya terkait voucher merchant.`);
+            whatsappEl.href = `https://wa.me/${waNumber}?text=${waText}`;
+            whatsappEl.classList.remove('hidden');
+        } else {
+            whatsappEl.classList.add('hidden');
         }
 
         // Offer Description

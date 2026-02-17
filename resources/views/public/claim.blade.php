@@ -16,9 +16,10 @@
         </div>
 
         <!-- Form -->
-        <form method="POST" action="{{ route('public.claim.store') }}" class="p-6 space-y-4">
+        <form method="POST" action="{{ route('public.claim.store') }}" enctype="multipart/form-data" class="p-6 space-y-4">
             @csrf
             <input type="hidden" name="code" value="{{ $code }}">
+            @php($selectedPaymentMethod = old('payment_method', 'cash'))
 
             <!-- Error Messages -->
             @if($errors->any())
@@ -106,6 +107,51 @@
                 >
             </div>
 
+            <!-- Payment Method -->
+            <div>
+                <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">
+                    Metode Pembayaran <span class="text-red-500">*</span>
+                </label>
+                <select
+                    name="payment_method"
+                    id="payment_method"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('payment_method') border-red-500 @enderror"
+                    required
+                >
+                    <option value="cash" {{ $selectedPaymentMethod === 'cash' ? 'selected' : '' }}>Cash</option>
+                    <option value="transfer" {{ $selectedPaymentMethod === 'transfer' ? 'selected' : '' }}>Transfer</option>
+                </select>
+            </div>
+
+            <div id="transferFields" class="space-y-3 {{ $selectedPaymentMethod === 'transfer' ? '' : 'hidden' }}">
+                <div>
+                    <label for="transfer_destination" class="block text-sm font-medium text-gray-700 mb-1">
+                        Transfer ke Mana <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="transfer_destination"
+                        id="transfer_destination"
+                        value="{{ old('transfer_destination') }}"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('transfer_destination') border-red-500 @enderror"
+                        placeholder="Contoh: BCA 1234567890 a.n. Yayasan ABC"
+                    >
+                </div>
+                <div>
+                    <label for="transfer_proof" class="block text-sm font-medium text-gray-700 mb-1">
+                        Upload Bukti Transfer <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="file"
+                        name="transfer_proof"
+                        id="transfer_proof"
+                        accept=".jpg,.jpeg,.png,.pdf,image/*,application/pdf"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('transfer_proof') border-red-500 @enderror"
+                    >
+                    <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, PDF. Maksimal 4MB.</p>
+                </div>
+            </div>
+
             <!-- Nominal Penyaluran -->
             <div class="pt-2">
                 <p class="text-sm font-medium text-gray-700 mb-2">Nominal Penyaluran</p>
@@ -122,6 +168,21 @@
                             step="1"
                             value="{{ old('zakat_fitrah_amount', 0) }}"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_fitrah_amount') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                    </div>
+                    <div>
+                        <label for="zakat_mal_amount" class="block text-xs font-medium text-gray-600 mb-1">
+                            Zakat Mal (Rp)
+                        </label>
+                        <input 
+                            type="number" 
+                            name="zakat_mal_amount" 
+                            id="zakat_mal_amount" 
+                            min="0"
+                            step="1"
+                            value="{{ old('zakat_mal_amount', 0) }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_mal_amount') border-red-500 @enderror"
                             placeholder="0"
                         >
                     </div>
@@ -242,6 +303,35 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentMethod = document.getElementById('payment_method');
+        const transferFields = document.getElementById('transferFields');
+        const transferDestination = document.getElementById('transfer_destination');
+        const transferProof = document.getElementById('transfer_proof');
+
+        function toggleTransferFields() {
+            const isTransfer = paymentMethod && paymentMethod.value === 'transfer';
+
+            if (transferFields) {
+                transferFields.classList.toggle('hidden', !isTransfer);
+            }
+
+            if (transferDestination) {
+                transferDestination.required = isTransfer;
+            }
+
+            if (transferProof) {
+                transferProof.required = isTransfer;
+            }
+        }
+
+        if (paymentMethod) {
+            paymentMethod.addEventListener('change', toggleTransferFields);
+            toggleTransferFields();
+        }
+    });
+</script>
 
 <style>
     .select2-container--default .select2-selection--single {

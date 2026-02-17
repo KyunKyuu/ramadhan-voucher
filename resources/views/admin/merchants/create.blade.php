@@ -69,6 +69,26 @@
                 </div>
 
                 <div>
+                    <label for="google_maps_link" class="block text-sm font-medium text-gray-700 mb-1">
+                        Link Google Maps
+                    </label>
+                    <input type="text" name="google_maps_link" id="google_maps_link" value="{{ old('google_maps_link') }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('google_maps_link') border-red-500 @enderror"
+                        placeholder="https://maps.google.com/...">
+                    @error('google_maps_link')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label for="admin_phone" class="block text-sm font-medium text-gray-700 mb-1">
+                        Nomor Admin (WhatsApp)
+                    </label>
+                    <input type="text" name="admin_phone" id="admin_phone" value="{{ old('admin_phone') }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('admin_phone') border-red-500 @enderror"
+                        placeholder="Contoh: 081234567890 / 6281234567890">
+                    @error('admin_phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
                     <label for="website" class="block text-sm font-medium text-gray-700 mb-1">
                         Social Media / Website
                     </label>

@@ -82,6 +82,7 @@ class DashboardDataSeeder extends Seeder
                     'email' => 'claimant_' . Str::random(5) . '@example.com',
                     'phone' => '0812' . rand(10000000, 99999999),
                     'zakat_fitrah_amount' => rand(0, 1) ? rand(35000, 150000) : 0,
+                    'zakat_mal_amount' => rand(0, 1) ? rand(50000, 300000) : 0,
                     'infaq_amount' => rand(0, 1) ? rand(10000, 50000) : 0,
                     'sodaqoh_amount' => rand(0, 1) ? rand(5000, 100000) : 0,
                     'public_token' => Str::random(32),

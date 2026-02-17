@@ -18,8 +18,12 @@ class Claim extends Model
         'email',
         'phone',
         'zakat_fitrah_amount',
+        'zakat_mal_amount',
         'infaq_amount',
         'sodaqoh_amount',
+        'payment_method',
+        'transfer_destination',
+        'transfer_proof_path',
         'public_token',
         'verification_status',
         'verification_note',
@@ -28,6 +32,7 @@ class Claim extends Model
 
     protected $casts = [
         'zakat_fitrah_amount' => 'decimal:2',
+        'zakat_mal_amount' => 'decimal:2',
         'infaq_amount' => 'decimal:2',
         'sodaqoh_amount' => 'decimal:2',
         'verified_at' => 'datetime',
@@ -38,7 +43,7 @@ class Claim extends Model
      */
     public function getTotalDonationAmountAttribute(): float
     {
-        return $this->zakat_fitrah_amount + $this->infaq_amount + $this->sodaqoh_amount;
+        return $this->zakat_fitrah_amount + $this->zakat_mal_amount + $this->infaq_amount + $this->sodaqoh_amount;
     }
 
     /**

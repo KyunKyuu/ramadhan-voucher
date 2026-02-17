@@ -11,7 +11,7 @@
     </div>
 
     <!-- Donation Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <!-- Zakat Fitrah -->
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-emerald-500">
             <div class="flex items-center justify-between">
@@ -21,6 +21,19 @@
                 </div>
                 <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
                     <span class="text-xl">🕌</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zakat Mal -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-cyan-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Zakat Mal</p>
+                    <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($donations['zakat_mal'], 0, ',', '.') }}</p>
+                </div>
+                <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center">
+                    <span class="text-xl">💠</span>
                 </div>
             </div>
         </div>
@@ -309,9 +322,18 @@
                 datasets: [
                     {
                         label: 'Zakat Fitrah',
-                        data: {!! json_encode($chartData['zakat']) !!},
+                        data: {!! json_encode($chartData['zakat_fitrah']) !!},
                         borderColor: '#10b981', // emerald-500
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Zakat Mal',
+                        data: {!! json_encode($chartData['zakat_mal']) !!},
+                        borderColor: '#06b6d4', // cyan-500
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
                         borderWidth: 2,
                         tension: 0.3,
                         fill: true

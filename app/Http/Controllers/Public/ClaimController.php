@@ -60,11 +60,18 @@ class ClaimController extends Controller
                 'email' => 'required|email|max:100',
                 'phone' => 'required|string|max:30',
                 'zakat_fitrah_amount' => 'nullable|numeric|min:0',
+                'zakat_mal_amount' => 'nullable|numeric|min:0',
                 'infaq_amount' => 'nullable|numeric|min:0',
                 'sodaqoh_amount' => 'nullable|numeric|min:0',
+                'payment_method' => 'required|in:cash,transfer',
+                'transfer_destination' => 'nullable|required_if:payment_method,transfer|string|max:255',
+                'transfer_proof' => 'nullable|required_if:payment_method,transfer|file|mimes:jpg,jpeg,png,pdf|max:4096',
             ]);
             $zakatFitrahAmount = isset($validated['zakat_fitrah_amount'])
                 ? (float) $validated['zakat_fitrah_amount']
+                : 0;
+            $zakatMalAmount = isset($validated['zakat_mal_amount'])
+                ? (float) $validated['zakat_mal_amount']
                 : 0;
             $infaqAmount = isset($validated['infaq_amount'])
                 ? (float) $validated['infaq_amount']
@@ -72,6 +79,14 @@ class ClaimController extends Controller
             $sodaqohAmount = isset($validated['sodaqoh_amount'])
                 ? (float) $validated['sodaqoh_amount']
                 : 0;
+            $transferProofPath = null;
+
+            if (
+                ($validated['payment_method'] ?? 'cash') === 'transfer' &&
+                $request->hasFile('transfer_proof')
+            ) {
+                $transferProofPath = $request->file('transfer_proof')->store('transfer-proofs', 'public');
+            }
 
             $claim = $this->claimService->processClaim(
                 $validated['code'],
@@ -80,8 +95,12 @@ class ClaimController extends Controller
                 $validated['email'],
                 $validated['phone'],
                 $zakatFitrahAmount,
+                $zakatMalAmount,
                 $infaqAmount,
-                $sodaqohAmount
+                $sodaqohAmount,
+                $validated['payment_method'],
+                $validated['transfer_destination'] ?? null,
+                $transferProofPath
             );
 
             return redirect()->route('public.vouchers', ['token' => $claim->public_token]);

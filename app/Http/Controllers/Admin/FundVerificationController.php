@@ -30,7 +30,7 @@ class FundVerificationController extends Controller
         $days = Claim::select(
                 DB::raw('DATE(ADDTIME(created_at, "04:00:00")) as financial_date'),
                 DB::raw('COUNT(*) as total_vouchers'),
-                DB::raw('SUM(zakat_fitrah_amount + infaq_amount + sodaqoh_amount) as total_amount'),
+                DB::raw('SUM(zakat_fitrah_amount + zakat_mal_amount + infaq_amount + sodaqoh_amount) as total_amount'),
                 DB::raw('SUM(CASE WHEN verification_status = "VERIFIED" THEN 1 ELSE 0 END) as verified_count'),
                 DB::raw('SUM(CASE WHEN verification_status = "ANOMALY" THEN 1 ELSE 0 END) as anomaly_count')
             )

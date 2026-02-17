@@ -55,17 +55,19 @@ class DashboardController extends Controller
         // Donation Stats
         $donations = [
             'zakat_fitrah' => Claim::sum('zakat_fitrah_amount'),
+            'zakat_mal' => Claim::sum('zakat_mal_amount'),
             'infaq' => Claim::sum('infaq_amount'),
             'sodaqoh' => Claim::sum('sodaqoh_amount'),
         ];
-        $donations['total'] = $donations['zakat_fitrah'] + $donations['infaq'] + $donations['sodaqoh'];
+        $donations['total'] = $donations['zakat_fitrah'] + $donations['zakat_mal'] + $donations['infaq'] + $donations['sodaqoh'];
 
         // Chart Data (Last 30 Days)
         $endDate = now();
         $startDate = now()->subDays(29);
         
         $dailyStats = Claim::selectRaw('DATE(created_at) as date, 
-                SUM(zakat_fitrah_amount) as zakat, 
+                SUM(zakat_fitrah_amount) as zakat_fitrah,
+                SUM(zakat_mal_amount) as zakat_mal,
                 SUM(infaq_amount) as infaq, 
                 SUM(sodaqoh_amount) as sodaqoh')
             ->whereBetween('created_at', [$startDate, $endDate])
@@ -77,7 +79,8 @@ class DashboardController extends Controller
         // Prepare chart structure with zero-filling
         $chartLabels = [];
         $chartData = [
-            'zakat' => [],
+            'zakat_fitrah' => [],
+            'zakat_mal' => [],
             'infaq' => [],
             'sodaqoh' => []
         ];
@@ -87,7 +90,8 @@ class DashboardController extends Controller
             $chartLabels[] = $startDate->copy()->addDays($i)->format('d M');
             
             $dayStat = $dailyStats[$date] ?? null;
-            $chartData['zakat'][] = $dayStat ? $dayStat->zakat : 0;
+            $chartData['zakat_fitrah'][] = $dayStat ? $dayStat->zakat_fitrah : 0;
+            $chartData['zakat_mal'][] = $dayStat ? $dayStat->zakat_mal : 0;
             $chartData['infaq'][] = $dayStat ? $dayStat->infaq : 0;
             $chartData['sodaqoh'][] = $dayStat ? $dayStat->sodaqoh : 0;
         }
@@ -95,13 +99,13 @@ class DashboardController extends Controller
         // Fund Verification Stats
         $fundStats = [
             'verified' => Claim::where('verification_status', 'VERIFIED')
-                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + infaq_amount + sodaqoh_amount')),
+                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + zakat_mal_amount + infaq_amount + sodaqoh_amount')),
             
             'pending' => Claim::where('verification_status', 'PENDING')
-                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + infaq_amount + sodaqoh_amount')),
+                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + zakat_mal_amount + infaq_amount + sodaqoh_amount')),
             
             'anomaly' => Claim::where('verification_status', 'ANOMALY')
-                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + infaq_amount + sodaqoh_amount')),
+                ->sum(\Illuminate\Support\Facades\DB::raw('zakat_fitrah_amount + zakat_mal_amount + infaq_amount + sodaqoh_amount')),
                 
             'verified_count' => Claim::where('verification_status', 'VERIFIED')->count(),
             'pending_count' => Claim::where('verification_status', 'PENDING')->count(),
