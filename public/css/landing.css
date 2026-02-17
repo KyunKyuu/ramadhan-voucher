@@ -448,9 +448,18 @@ body {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
     .hero {
         flex-direction: column-reverse;
         text-align: center;
+        padding: 3rem 0;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
     }
 
     .hero-content {
@@ -459,46 +468,119 @@ body {
 
     .hero-image {
         margin-bottom: 2rem;
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    /* Navbar Mobile */
+    .nav-container {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .nav-left,
+    .nav-center,
+    .nav-right {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .nav-left {
+        order: 2;
+        /* Socials below logo */
+        margin-bottom: 0.5rem;
+    }
+
+    .nav-center {
+        order: 1;
+        /* Logo on top */
+    }
+
+    .nav-right {
+        order: 3;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* Sections Mobile */
     .problem-section {
         flex-direction: column;
         text-align: center;
+        padding: 4rem 0;
+        gap: 3rem;
     }
 
     .solution-section {
         flex-direction: column;
         text-align: center;
-        gap: 2rem;
+        gap: 2.5rem;
+        padding: 3rem 0;
     }
 
+    .solution-left,
     .solution-right {
+        max-width: 100%;
         text-align: center;
+    }
+
+    .solution-right img {
+        margin: 0 auto;
+    }
+
+    .bank-number {
+        font-size: 1.8rem;
+        /* Reduced from 2.5rem */
+        word-break: break-all;
+        /* Ensure long numbers break if needed */
+        margin: 1rem 0;
+    }
+
+    /* Features Mobile */
+    .features-title {
+        font-size: 2rem;
+        margin-bottom: 4rem;
+        /* Reduced from 5rem but enough for icon */
     }
 
     .features-grid {
         grid-template-columns: 1fr;
-        gap: 4rem;
+        gap: 6rem;
+        /* Increased gap to prevent icon overlap */
+        padding-top: 2rem;
     }
 
+    /* How It Works Mobile */
     .how-grid {
         grid-template-columns: 1fr;
+        gap: 3rem;
     }
 
     .how-grid img {
         order: -1;
         margin: 0 auto;
         display: block;
+        max-width: 80%;
     }
 
+    /* Footer Mobile */
     .footer-cta {
         flex-direction: column;
         text-align: center;
-        gap: 2rem;
+        gap: 2.5rem;
     }
 
-    .footer-bank-details {
-        text-align: center;
+    .footer-cta-title {
+        font-size: 1.8rem;
+    }
+
+    .footer-bank-details div {
+        text-align: center !important;
+    }
+
+    .footer-bank-details img {
+        margin: 0 auto;
+        display: block;
     }
 
     .footer-content {
@@ -509,35 +591,11 @@ body {
 
     .footer-left {
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
+        justify-content: center;
     }
 
     .footer-right {
         text-align: center;
-    }
-
-    .footer-links a {
-        display: block;
-        margin: 0.5rem 0;
-        margin-left: 0;
-    }
-
-    /* Mobile Navbar */
-    .nav-container {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .nav-left,
-    .nav-center,
-    .nav-right {
-        flex: initial;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .nav-right {
-        flex-direction: column;
-        gap: 0.5rem;
     }
 }
