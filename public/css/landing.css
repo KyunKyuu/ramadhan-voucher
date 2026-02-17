@@ -364,19 +364,23 @@ body {
 .step-number {
     background: white;
     color: #3b5bdb;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 700;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.2rem;
     white-space: nowrap;
 }
 
 .step-text h4 {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.3rem;
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
 .step-text p {
-    font-size: 0.9rem;
-    opacity: 0.9;
+    font-size: 1.1rem;
+    opacity: 0.95;
+    line-height: 1.4;
 }
 
 /* Footer CTA */
