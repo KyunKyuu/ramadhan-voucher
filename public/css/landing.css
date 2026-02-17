@@ -511,10 +511,13 @@ body {
         gap: 3rem;
     }
 
-    .solution-section {
+    .solution-section .container {
         flex-direction: column;
-        text-align: center;
         gap: 2.5rem;
+    }
+
+    .solution-section {
+        text-align: center;
         padding: 3rem 0;
     }
 
