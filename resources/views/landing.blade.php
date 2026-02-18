@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muslim Level Up Academy - Ramadhan Berjaya</title>
-    <link href="{{ asset('css/landing.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/landing.css') }}?v={{ time() }}" rel="stylesheet">
 </head>
 
 <body>
