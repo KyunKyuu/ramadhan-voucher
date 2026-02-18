@@ -173,12 +173,193 @@ body {
     color: #636e72;
     margin-bottom: 2rem;
     font-size: 1.1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-decoration {
+    position: absolute;
+    top: -50px;
+    left: -150px;
+    width: 300px;
+    z-index: 1;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.hero-decoration img {
+    width: 100%;
+    height: auto;
+}
+
+/* Hero Image/Video Container */
+/* Hero Image/Video Container */
+.hero-image {
+    position: relative;
+    width: 420px;
+    /* Increased from 350px */
+    height: 720px;
+    /* Increased from 600px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero-image img {
     max-width: 100%;
     height: auto;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
+/* Stack Container */
+.video-stack-container {
+    position: relative;
+    width: 360px;
+    /* Increased from 300px */
+    height: 640px;
+    /* Increased from 533px */
+    perspective: 1000px;
+}
+
+/* Common Video Card Styles */
+.video-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    transition: all 0.6s ease-in-out;
+    background: #000;
+
+    /* Enhanced Blue Ramadhan Border */
+    padding: 6px;
+    background: linear-gradient(135deg, #4c6ef5, #a5b1c2, #5f27cd, #4c6ef5);
+    background-size: 300% 300%;
+    animation: gradientBorder 4s ease infinite;
+    box-shadow:
+        0 20px 50px rgba(76, 110, 245, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    /* Double border effect */
+}
+
+@keyframes gradientBorder {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    display: block;
+}
+
+/* Video Number Indicator */
+.video-number {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 60px;
+    height: 60px;
+    background: #4c6ef5;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    z-index: 20;
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Front State */
+.video-card.front {
+    z-index: 10;
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+/* Back State */
+.video-card.back {
+    z-index: 5;
+    transform: translateX(100px) scale(0.9) rotateY(-10deg);
+    /* Adjusted translateX for larger size */
+    opacity: 0.6;
+}
+
+/* Video Controls */
+.video-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.video-control-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-control-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.video-control-btn svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hero-image {
+        width: 100%;
+        height: auto;
+        min-height: 500px;
+    }
+
+    .video-stack-container {
+        width: 250px;
+        height: 444px;
+        /* 9:16 aspect */
+        margin: 0 auto;
+    }
+
+    .hero-video {
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .btn-donate {
@@ -228,6 +409,14 @@ body {
 
 .problem-image {
     flex: 1;
+    text-align: center;
+    /* Center the image */
+}
+
+.problem-cap-img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
 }
 
 .problem-content {
@@ -514,6 +703,11 @@ body {
     .solution-section .container {
         flex-direction: column;
         gap: 2.5rem;
+    }
+
+    .problem-cap-img {
+        max-width: 250px !important;
+        /* Smaller on mobile */
     }
 
     .solution-section {

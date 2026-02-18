@@ -52,7 +52,12 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero container">
+    <section class="hero container" style="position: relative;">
+        <!-- Decorative Asset -->
+        <div class="hero-decoration">
+            <img src="{{ asset('images/asset/Asset-3@4x.png') }}" alt="Decoration">
+        </div>
+
         <div class="hero-content">
             <h3 style="color: #333; font-weight: 600; font-size: 1.2rem; margin-bottom: 0.5rem;">MLUP Berjaya</h3>
             <h1 class="hero-title" style="color: #4c6ef5;">Berkah Ramadhan<br>Menuju Raya</h1>
@@ -65,11 +70,51 @@
             <a href="#donate" class="btn-donate">Donasi Sekarang</a>
         </div>
         <div class="hero-image">
-            <img src="{{ asset('images/asset/Asset-1@4x.png') }}" alt="Mosque & Ketupat">
+            <div class="video-stack-container">
+                <!-- Video 1 (Initially Front) -->
+                <div class="video-card front" id="video1">
+                    <div class="video-number">01</div>
+                    <video autoplay muted playsinline class="hero-video">
+                        <source src="{{ asset('vidio/1.mp4') }}" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Video 2 (Initially Back) -->
+                <div class="video-card back" id="video2">
+                    <div class="video-number">02</div>
+                    <video muted playsinline class="hero-video">
+                        <source src="{{ asset('vidio/2.mp4') }}" type="video/mp4">
+                    </video>
+                </div>
+
+                <!-- Video Controls -->
+                <div class="video-controls">
+                    <button class="video-control-btn" id="togglePlayBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor" class="icon-pause">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor" class="icon-play hidden">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                    </button>
+                    <button class="video-control-btn" id="nextVideoBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor">
+                            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Collaboration Section -->
+    <!-- Post-sections code -->
+    <!-- ... -->
+
+    <!-- Post-sections code -->
+    <!-- ... -->
+
     <section class="collaboration">
         <div class="container">
             <p class="collab-text">In collaboration with:</p>
@@ -77,14 +122,63 @@
                 <img src="{{ asset('images/asset/Asset-2@4x.png') }}" class="collab-logo-full" alt="Collaborators"
                     style="width: 100%; max-width: 900px; height: auto;">
             </div>
+
+            <!-- Community Support Section -->
+            <div class="community-support" style="margin-top: 4rem;">
+                <p class="collab-text" style="margin-bottom: 2rem; font-size: 1.2rem;">Community Support:</p>
+                <div class="community-logos"
+                    style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; align-items: center;">
+                    <!-- Logo 1 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/Logo Craftiva.JPG.jpeg') }}" alt="Craftiva"
+                            style="height: 100%; width: auto;">
+                    </div>
+                    <!-- Logo 2 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/Logo Hawa Community.png') }}" alt="Hawa Community"
+                            style="height: 100%; width: auto;">
+                    </div>
+                    <!-- Logo 3 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/Logo Ruang Alara (1).png') }}" alt="Ruang Alara"
+                            style="height: 100%; width: auto;">
+                    </div>
+                    <!-- Logo 4 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/Logo.png') }}" alt="Logo"
+                            style="height: 100%; width: auto;">
+                    </div>
+                    <!-- Logo 5 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/logo ufairah.jpg.jpeg') }}" alt="Ufairah"
+                            style="height: 100%; width: auto;">
+                    </div>
+                    <!-- Logo 6 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/new gemusi.png') }}" alt="Gemusi"
+                            style="height: 100%; width: auto;">
+                    </div>
+                    <!-- Logo 7 -->
+                    <div class="community-logo-item"
+                        style="background: white; padding: 12px; border-radius: 16px; height: 100px; display: flex; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/komunitas/rest area.png') }}" alt="Rest Area"
+                            style="height: 100%; width: auto;">
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Problem Section -->
     <section class="problem-section container">
         <div class="problem-image">
-            <img src="{{ asset('images/asset/Asset-3@4x.png') }}" alt="Graduation Cap"
-                style="width: 100%; max-width: 400px;">
+            <img src="{{ asset('images/asset/Asset-3@4x.png') }}" alt="Graduation Cap" class="problem-cap-img">
         </div>
         <div class="problem-content">
             <h2 class="problem-title">Jangan biarkan<br>mimpi mereka terhenti.</h2>
@@ -221,6 +315,7 @@
     </section>
 
     <!-- Footer Bottom -->
+    <!-- Footer Bottom -->
     <footer class="footer-bottom">
         <div class="container footer-content">
             <!-- Left: Socials -->
@@ -257,6 +352,113 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const v1 = document.getElementById('video1');
+            const v2 = document.getElementById('video2');
+            const vid1 = v1.querySelector('video');
+            const vid2 = v2.querySelector('video');
+            const toggleBtn = document.getElementById('togglePlayBtn');
+            const nextBtn = document.getElementById('nextVideoBtn');
+            const iconPause = toggleBtn.querySelector('.icon-pause');
+            const iconPlay = toggleBtn.querySelector('.icon-play');
+
+            // Initial State
+            let currentFront = v1;
+            let currentBack = v2;
+            let isPlaying = true;
+
+            function updatePlayIcon(playing) {
+                if (playing) {
+                    iconPause.classList.remove('hidden');
+                    iconPlay.classList.add('hidden');
+                } else {
+                    iconPause.classList.add('hidden');
+                    iconPlay.classList.remove('hidden');
+                }
+            }
+
+            // Toggle Play/Pause
+            toggleBtn.addEventListener('click', function () {
+                const video = currentFront.querySelector('video');
+                if (video.paused) {
+                    video.muted = false; // Unmute on explicit play interaction
+                    video.play();
+                    isPlaying = true;
+                } else {
+                    video.pause();
+                    isPlaying = false;
+                }
+                updatePlayIcon(isPlaying);
+            });
+
+            // Next Video
+            nextBtn.addEventListener('click', function () {
+                swapVideos();
+            });
+
+            function swapVideos() {
+                const activeVideo = currentFront.querySelector('video');
+                activeVideo.pause(); // Stop current
+
+                // Animate current front to left and back
+                currentFront.classList.remove('front');
+
+                // Move it to left first (animation)
+                currentFront.style.transform = "translateX(-120%) scale(0.8) rotateY(10deg)";
+                currentFront.style.opacity = "0";
+
+                // Bring back video to front
+                currentBack.classList.remove('back');
+                currentBack.classList.add('front');
+                const newFrontVideo = currentBack.querySelector('video');
+                newFrontVideo.currentTime = 0;
+                newFrontVideo.play();
+                newFrontVideo.muted = false; // Optional: unmute active video
+
+                // Reset play state
+                isPlaying = true;
+                updatePlayIcon(true);
+
+                // After animation, move the old front to the back position
+                setTimeout(() => {
+                    currentFront.style.transition = 'none'; // Disable transition for instant reset
+                    currentFront.classList.add('back');
+                    currentFront.style.transform = ''; // Clear inline transform to use class style
+                    currentFront.style.opacity = '';
+
+                    // Re-enable transition for next time
+                    setTimeout(() => {
+                        currentFront.style.transition = '';
+                    }, 50);
+
+                    // Swap references
+                    let temp = currentFront;
+                    currentFront = currentBack;
+                    currentBack = temp;
+
+                    // Mute the back video
+                    currentBack.querySelector('video').muted = true;
+
+                    // Setup next listener
+                    const newActive = currentFront.querySelector('video');
+                    newActive.onended = swapVideos;
+                }, 600); // Wait for transition duration
+            }
+
+            // Initialize listener on first video
+            vid1.onended = swapVideos;
+
+            // Ensure first video plays
+            vid1.play().catch(e => {
+                console.log("Auto-play prevented", e);
+                isPlaying = false;
+                updatePlayIcon(false);
+            });
+        });
+    </script>
+</body>
 
 </body>
 
