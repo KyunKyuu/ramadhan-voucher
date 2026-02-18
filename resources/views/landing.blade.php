@@ -81,9 +81,8 @@
                 <!-- Video 2 (Initially Back) -->
                 <div class="video-card back" id="video2">
                     <div class="video-number">02</div>
-                    <!-- Lazy load: use data-src -->
-                    <video class="hero-video" playsinline muted>
-                        <source data-src="{{ asset('vidio/2.mp4') }}" type="video/mp4">
+                    <!-- Lazy load: use data-src on video tag directly -->
+                    <video class="hero-video" playsinline muted data-src="{{ asset('vidio/2.mp4') }}">
                     </video>
                 </div>
 
@@ -142,9 +141,9 @@
             function loadVideo2() {
                 if (!video2Loaded) {
                     const vid2 = v2.querySelector('video');
-                    const source = vid2.querySelector('source');
-                    if (source.dataset.src) {
-                        source.src = source.dataset.src;
+                    // Check for data-src on the video element itself
+                    if (vid2.dataset.src) {
+                        vid2.src = vid2.dataset.src;
                         vid2.load();
                         video2Loaded = true;
                         console.log("Video 2 loaded via Play trigger");
