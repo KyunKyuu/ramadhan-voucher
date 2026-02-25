@@ -284,26 +284,23 @@
             toggleTransferFields();
         }
 
-        // Currency Formatter
+        // Currency Formatter - Simple and robust
         const currencyInputs = document.querySelectorAll('.currency-input');
 
-        function formatCurrency(value) {
-            // Remove all non-digit characters
-            const cleanValue = value.replace(/\D/g, '');
-
-            // Convert to number and format
-            if (cleanValue === '') {
-                return '';
+        // Helper function to format number to Rupiah
+        function formatRupiah(num) {
+            if (!num || num === '0') return '';
+            let str = num.toString();
+            let formatted = '';
+            let count = 0;
+            for (let i = str.length - 1; i >= 0; i--) {
+                if (count > 0 && count % 3 === 0) {
+                    formatted = '.' + formatted;
+                }
+                formatted = str[i] + formatted;
+                count++;
             }
-
-            const number = parseInt(cleanValue, 10);
-            return 'Rp ' + number.toLocaleString('id-ID');
-        }
-
-        function parseCurrency(formattedValue) {
-            // Remove 'Rp ' and all non-digit characters
-            const cleanValue = formattedValue.replace(/Rp\s/g, '').replace(/\D/g, '');
-            return cleanValue === '' ? 0 : parseInt(cleanValue, 10);
+            return 'Rp ' + formatted;
         }
 
         function updateHiddenField(inputId, rawValue) {
@@ -313,72 +310,48 @@
             }
         }
 
-        // Store cursor position
-        function storeCursorPosition(input) {
-            const cursorPosition = input.selectionStart;
-            const length = input.value.length;
-            return { cursorPosition, length };
-        }
-
         currencyInputs.forEach(function(input) {
-            let oldValue = '';
-
-            input.addEventListener('focus', function() {
-                oldValue = this.value;
-            });
-
             input.addEventListener('input', function(e) {
-                const rawValue = parseCurrency(this.value);
-                const formatted = formatCurrency(rawValue);
-
-                this.value = formatted;
-                updateHiddenField(this.id, rawValue);
-                oldValue = formatted;
+                // Get only digits
+                let value = this.value.replace(/\D/g, '');
+                // Update hidden field
+                updateHiddenField(this.id, value || 0);
+                // Format display
+                this.value = formatRupiah(value);
             });
 
-            // Handle special cases for better UX
+            // Prevent non-numeric input
             input.addEventListener('keydown', function(e) {
-                // Allow backspace, delete, tab, escape, enter
-                if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
-                    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                    (e.keyCode === 65 && e.ctrlKey === true) ||
-                    (e.keyCode === 67 && e.ctrlKey === true) ||
-                    (e.keyCode === 86 && e.ctrlKey === true) ||
-                    (e.keyCode === 88 && e.ctrlKey === true) ||
-                    // Allow: home, end, left, right
-                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // Allow special keys
+                if ([8, 9, 27, 13, 35, 36, 37, 38, 39, 40, 46].indexOf(e.keyCode) !== -1 ||
+                    (e.ctrlKey && [65, 67, 86, 88].indexOf(e.keyCode) !== -1)) {
                     return;
                 }
-                // Ensure that it is a number and stop the keypress
+                // Only allow numbers (0-9)
                 if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
                     e.preventDefault();
                 }
             });
 
-            // Update hidden field on blur
+            // Format on blur
             input.addEventListener('blur', function() {
-                const rawValue = parseCurrency(this.value);
-                updateHiddenField(this.id, rawValue);
-
-                // If empty, set to placeholder
-                if (this.value === '' || this.value === 'Rp ') {
-                    this.value = '';
-                    updateHiddenField(this.id, 0);
-                }
+                let value = this.value.replace(/\D/g, '');
+                updateHiddenField(this.id, value || 0);
+                this.value = formatRupiah(value);
             });
 
-            // Initialize hidden field with current value
-            const initialRawValue = parseCurrency(input.value);
-            updateHiddenField(input.id, initialRawValue);
+            // Initialize
+            let initialValue = input.value.replace(/\D/g, '');
+            updateHiddenField(input.id, initialValue || 0);
         });
 
-        // Update hidden fields right before form submission
+        // Update hidden fields before form submission
         const form = document.querySelector('form[action="{{ route('public.claim.store') }}"]');
         if (form) {
             form.addEventListener('submit', function(e) {
                 currencyInputs.forEach(function(input) {
-                    const rawValue = parseCurrency(input.value);
-                    updateHiddenField(input.id, rawValue);
+                    let value = input.value.replace(/\D/g, '');
+                    updateHiddenField(input.id, value || 0);
                 });
             });
         }
