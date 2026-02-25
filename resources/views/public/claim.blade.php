@@ -130,37 +130,41 @@
                         <label for="zakat_fitrah_amount" class="block text-xs font-medium text-gray-600 mb-1">
                             Zakat Fitrah (Rp)
                         </label>
-                        <input type="number" name="zakat_fitrah_amount" id="zakat_fitrah_amount" min="0" step="1"
-                            value="{{ old('zakat_fitrah_amount', 0) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_fitrah_amount') border-red-500 @enderror"
-                            placeholder="0">
+                        <input type="text" id="zakat_fitrah_amount"
+                            value="{{ old('zakat_fitrah_amount') ? 'Rp ' . number_format(old('zakat_fitrah_amount'), 0, ',', '.') : '' }}"
+                            class="currency-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_fitrah_amount') border-red-500 @enderror"
+                            placeholder="Rp 0">
+                        <input type="hidden" id="zakat_fitrah_amount_raw" name="zakat_fitrah_amount" value="{{ old('zakat_fitrah_amount', 0) }}">
                     </div>
                     <div>
                         <label for="zakat_mal_amount" class="block text-xs font-medium text-gray-600 mb-1">
                             Zakat Mal (Rp)
                         </label>
-                        <input type="number" name="zakat_mal_amount" id="zakat_mal_amount" min="0" step="1"
-                            value="{{ old('zakat_mal_amount', 0) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_mal_amount') border-red-500 @enderror"
-                            placeholder="0">
+                        <input type="text" id="zakat_mal_amount"
+                            value="{{ old('zakat_mal_amount') ? 'Rp ' . number_format(old('zakat_mal_amount'), 0, ',', '.') : '' }}"
+                            class="currency-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('zakat_mal_amount') border-red-500 @enderror"
+                            placeholder="Rp 0">
+                        <input type="hidden" id="zakat_mal_amount_raw" name="zakat_mal_amount" value="{{ old('zakat_mal_amount', 0) }}">
                     </div>
                     <div>
                         <label for="infaq_amount" class="block text-xs font-medium text-gray-600 mb-1">
                             Infaq (Rp)
                         </label>
-                        <input type="number" name="infaq_amount" id="infaq_amount" min="0" step="1"
-                            value="{{ old('infaq_amount', 0) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('infaq_amount') border-red-500 @enderror"
-                            placeholder="0">
+                        <input type="text" id="infaq_amount"
+                            value="{{ old('infaq_amount') ? 'Rp ' . number_format(old('infaq_amount'), 0, ',', '.') : '' }}"
+                            class="currency-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('infaq_amount') border-red-500 @enderror"
+                            placeholder="Rp 0">
+                        <input type="hidden" id="infaq_amount_raw" name="infaq_amount" value="{{ old('infaq_amount', 0) }}">
                     </div>
                     <div>
                         <label for="sodaqoh_amount" class="block text-xs font-medium text-gray-600 mb-1">
                             Sodaqoh (Rp)
                         </label>
-                        <input type="number" name="sodaqoh_amount" id="sodaqoh_amount" min="0" step="1"
-                            value="{{ old('sodaqoh_amount', 0) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('sodaqoh_amount') border-red-500 @enderror"
-                            placeholder="0">
+                        <input type="text" id="sodaqoh_amount"
+                            value="{{ old('sodaqoh_amount') ? 'Rp ' . number_format(old('sodaqoh_amount'), 0, ',', '.') : '' }}"
+                            class="currency-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('sodaqoh_amount') border-red-500 @enderror"
+                            placeholder="Rp 0">
+                        <input type="hidden" id="sodaqoh_amount_raw" name="sodaqoh_amount" value="{{ old('sodaqoh_amount', 0) }}">
                     </div>
                 </div>
                 <p class="mt-2 text-xs text-gray-500">
@@ -278,6 +282,105 @@
         if (paymentMethod) {
             paymentMethod.addEventListener('change', toggleTransferFields);
             toggleTransferFields();
+        }
+
+        // Currency Formatter
+        const currencyInputs = document.querySelectorAll('.currency-input');
+
+        function formatCurrency(value) {
+            // Remove all non-digit characters
+            const cleanValue = value.replace(/\D/g, '');
+
+            // Convert to number and format
+            if (cleanValue === '') {
+                return '';
+            }
+
+            const number = parseInt(cleanValue, 10);
+            return 'Rp ' + number.toLocaleString('id-ID');
+        }
+
+        function parseCurrency(formattedValue) {
+            // Remove 'Rp ' and all non-digit characters
+            const cleanValue = formattedValue.replace(/Rp\s/g, '').replace(/\D/g, '');
+            return cleanValue === '' ? 0 : parseInt(cleanValue, 10);
+        }
+
+        function updateHiddenField(inputId, rawValue) {
+            const hiddenField = document.getElementById(inputId + '_raw');
+            if (hiddenField) {
+                hiddenField.value = rawValue;
+            }
+        }
+
+        // Store cursor position
+        function storeCursorPosition(input) {
+            const cursorPosition = input.selectionStart;
+            const length = input.value.length;
+            return { cursorPosition, length };
+        }
+
+        currencyInputs.forEach(function(input) {
+            let oldValue = '';
+
+            input.addEventListener('focus', function() {
+                oldValue = this.value;
+            });
+
+            input.addEventListener('input', function(e) {
+                const rawValue = parseCurrency(this.value);
+                const formatted = formatCurrency(rawValue);
+
+                this.value = formatted;
+                updateHiddenField(this.id, rawValue);
+                oldValue = formatted;
+            });
+
+            // Handle special cases for better UX
+            input.addEventListener('keydown', function(e) {
+                // Allow backspace, delete, tab, escape, enter
+                if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+                    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    (e.keyCode === 65 && e.ctrlKey === true) ||
+                    (e.keyCode === 67 && e.ctrlKey === true) ||
+                    (e.keyCode === 86 && e.ctrlKey === true) ||
+                    (e.keyCode === 88 && e.ctrlKey === true) ||
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                    return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Update hidden field on blur
+            input.addEventListener('blur', function() {
+                const rawValue = parseCurrency(this.value);
+                updateHiddenField(this.id, rawValue);
+
+                // If empty, set to placeholder
+                if (this.value === '' || this.value === 'Rp ') {
+                    this.value = '';
+                    updateHiddenField(this.id, 0);
+                }
+            });
+
+            // Initialize hidden field with current value
+            const initialRawValue = parseCurrency(input.value);
+            updateHiddenField(input.id, initialRawValue);
+        });
+
+        // Update hidden fields right before form submission
+        const form = document.querySelector('form[action="{{ route('public.claim.store') }}"]');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                currencyInputs.forEach(function(input) {
+                    const rawValue = parseCurrency(input.value);
+                    updateHiddenField(input.id, rawValue);
+                });
+            });
         }
     });
 </script>

@@ -54,8 +54,10 @@
     <!-- Hero Section -->
     <section class="hero container" style="position: relative;">
         <!-- Decorative Asset -->
-        <div class="hero-decoration">
-            <img src="{{ asset('images/asset/Asset-3@4x.png') }}" alt="Decoration">
+        <!-- Decorative Asset -->
+        <div class="hero-decoration"
+            style="position: absolute; top: -50px; left: -150px; width: 300px; z-index: 1; opacity: 0.6; pointer-events: none;">
+            <img src="{{ asset('images/asset/Asset-3@4x.png') }}" alt="Decoration" style="width: 100%; height: auto;">
         </div>
 
         <div class="hero-content">
