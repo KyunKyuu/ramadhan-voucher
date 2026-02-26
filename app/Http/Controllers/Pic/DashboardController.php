@@ -15,7 +15,7 @@ class DashboardController extends Controller
     public function index()
     {
         $pic = auth()->user()->pic;
-        
+
         if (!$pic) {
             abort(403, 'User is not associated with a PIC account');
         }
@@ -24,11 +24,11 @@ class DashboardController extends Controller
         $stats = [
             'assigned' => $pic->initialVouchers()->where('status', 'ASSIGNED')->count(),
             'claimed' => $pic->initialVouchers()->where('status', 'CLAIMED')->count(),
-            'redeemed' => $pic->initialVouchers()->whereHas('merchantVouchers', function($q) {
+            'redeemed' => $pic->initialVouchers()->whereHas('merchantVouchers', function ($q) {
                 $q->where('status', 'REDEEMED');
             })->count(),
             'commission' => $pic->initialVouchers()
-                ->whereHas('merchantVouchers', function($q) {
+                ->whereHas('merchantVouchers', function ($q) {
                     $q->where('status', 'REDEEMED');
                 })
                 ->sum('commission_amount'),
@@ -39,9 +39,9 @@ class DashboardController extends Controller
         // Let's get latest 5 or 10 for each category to display in dashboard, 
         // or just all of them if the volume isn't huge yet.
         // Given the requirement "berisi daftar voucher...", implying full lists or at least accessible.
-        
+
         $assignedVouchers = $pic->initialVouchers()
-            ->with(['batch'])
+            ->with(['batch', 'claim'])
             ->where('status', 'ASSIGNED')
             ->latest()
             ->paginate(10, ['*'], 'assigned_page');
@@ -53,12 +53,15 @@ class DashboardController extends Controller
             ->paginate(10, ['*'], 'claimed_page');
 
         $redeemedVouchers = $pic->initialVouchers()
-            ->whereHas('merchantVouchers', function($q) {
+            ->whereHas('merchantVouchers', function ($q) {
                 $q->where('status', 'REDEEMED');
             })
-            ->with(['merchantVouchers' => function($q) {
-                $q->where('status', 'REDEEMED')->with('merchant');
-            }, 'claim'])
+            ->with([
+                'merchantVouchers' => function ($q) {
+                    $q->where('status', 'REDEEMED')->with('merchant');
+                },
+                'claim'
+            ])
             ->latest()
             ->paginate(10, ['*'], 'redeemed_page');
 
@@ -71,7 +74,7 @@ class DashboardController extends Controller
         ini_set('memory_limit', '512M');
 
         $pic = auth()->user()->pic;
-        
+
         if (!$pic) {
             abort(403, 'User is not associated with a PIC account');
         }
@@ -99,7 +102,7 @@ class DashboardController extends Controller
             foreach ($vouchers as $index => $voucher) {
                 $pdf = Pdf::loadView('pic.print.single-voucher', compact('voucher'))
                     ->setPaper('a4', 'landscape');
-                
+
                 $pdfContent = $pdf->output();
                 $filename = 'voucher_' . ($index + 1) . '_' . $voucher->code . '.pdf';
                 $zip->addFromString($filename, $pdfContent);
