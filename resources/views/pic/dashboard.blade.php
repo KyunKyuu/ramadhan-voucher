@@ -100,7 +100,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $voucher->code }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->batch->name ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->claim->name ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format($voucher->claim->total_donation_amount ?? 0, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format((float)(($voucher->claim->zakat_fitrah_amount ?? 0) + ($voucher->claim->zakat_mal_amount ?? 0) + ($voucher->claim->infaq_amount ?? 0) + ($voucher->claim->sodaqoh_amount ?? 0)), 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format($voucher->commission_amount, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -146,7 +146,7 @@
                             {{ $voucher->claim->name ?? '-' }}<br>
                             <span class="text-xs text-gray-400">{{ $voucher->claim->phone ?? '' }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">Rp {{ number_format($voucher->claim->total_donation_amount ?? 0, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">Rp {{ number_format((float)(($voucher->claim->zakat_fitrah_amount ?? 0) + ($voucher->claim->zakat_mal_amount ?? 0) + ($voucher->claim->infaq_amount ?? 0) + ($voucher->claim->sodaqoh_amount ?? 0)), 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->claimed_at ? $voucher->claimed_at->format('d M Y H:i') : '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -207,7 +207,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $voucher->code }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mv->merchant->name ?? '-' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->claim->name ?? '-' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format($voucher->claim->total_donation_amount ?? 0, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format((float)(($voucher->claim->zakat_fitrah_amount ?? 0) + ($voucher->claim->zakat_mal_amount ?? 0) + ($voucher->claim->infaq_amount ?? 0) + ($voucher->claim->sodaqoh_amount ?? 0)), 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">Rp {{ number_format($voucher->commission_amount, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mv->redeemed_at ? $mv->redeemed_at->format('d M Y H:i') : '-' }}</td>
                             </tr>
