@@ -40,7 +40,6 @@ Route::middleware(['auth', 'role:SUPERADMIN'])->prefix('admin')->name('admin.')-
 
     // Data Views
     Route::get('/claims', [ClaimDataController::class, 'index'])->name('claims.index');
-    Route::get('/claims/{id}/edit', [ClaimDataController::class, 'edit'])->name('claims.edit');
     Route::put('/claims/{id}', [ClaimDataController::class, 'update'])->name('claims.update');
     Route::get('/claims/{id}', [ClaimDataController::class, 'show'])->name('claims.show');
     Route::get('/redeems', [RedeemDataController::class, 'index'])->name('redeems.index');

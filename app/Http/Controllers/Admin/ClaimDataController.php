@@ -70,15 +70,6 @@ class ClaimDataController extends Controller
     }
 
     /**
-     * Show the form for editing a claim.
-     */
-    public function edit($id)
-    {
-        $claim = Claim::findOrFail($id);
-        return view('admin.claims.edit', compact('claim'));
-    }
-
-    /**
      * Update the claim.
      */
     public function update(Request $request, $id)
