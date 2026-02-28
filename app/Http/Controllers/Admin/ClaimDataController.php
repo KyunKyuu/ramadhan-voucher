@@ -35,7 +35,7 @@ class ClaimDataController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -67,5 +67,36 @@ class ClaimDataController extends Controller
         ])->findOrFail($id);
 
         return view('admin.claims.show', compact('claim'));
+    }
+
+    /**
+     * Show the form for editing a claim.
+     */
+    public function edit($id)
+    {
+        $claim = Claim::findOrFail($id);
+        return view('admin.claims.edit', compact('claim'));
+    }
+
+    /**
+     * Update the claim.
+     */
+    public function update(Request $request, $id)
+    {
+        $claim = Claim::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'zakat_fitrah_amount' => 'required|numeric|min:0',
+            'zakat_mal_amount' => 'required|numeric|min:0',
+            'infaq_amount' => 'required|numeric|min:0',
+            'sodaqoh_amount' => 'required|numeric|min:0',
+        ]);
+
+        $claim->update($validated);
+
+        return redirect()->route('admin.claims.index')->with('success', 'Claim updated successfully.');
     }
 }
