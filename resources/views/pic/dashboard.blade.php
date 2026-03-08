@@ -86,6 +86,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode Voucher</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Donatur</th>
@@ -97,6 +98,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($assignedVouchers as $voucher)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ($assignedVouchers->currentPage() - 1) * $assignedVouchers->perPage() + $loop->iteration }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $voucher->code }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->batch->name ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->claim->name ?? '-' }}</td>
@@ -110,7 +112,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada voucher yang di-assign.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada voucher yang di-assign.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -130,6 +132,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode Voucher</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Donatur</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal Donasi</th>
@@ -141,6 +144,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($claimedVouchers as $voucher)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ($claimedVouchers->currentPage() - 1) * $claimedVouchers->perPage() + $loop->iteration }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $voucher->code }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $voucher->claim->name ?? '-' }}<br>
@@ -171,7 +175,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada voucher yang di-claim.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada voucher yang di-claim.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -191,6 +195,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode Voucher</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Merchant</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Donatur</th>
@@ -200,10 +205,13 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    @php $redeemedCount = 0; @endphp
                     @forelse($redeemedVouchers as $voucher)
                         @foreach($voucher->merchantVouchers as $mv)
                             @if($mv->status === 'REDEEMED')
+                            @php $redeemedCount++; @endphp
                             <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ($redeemedVouchers->currentPage() - 1) * $redeemedVouchers->perPage() + $redeemedCount }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $voucher->code }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mv->merchant->name ?? '-' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $voucher->claim->name ?? '-' }}</td>
@@ -215,7 +223,7 @@
                         @endforeach
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada voucher yang di-redeem.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada voucher yang di-redeem.</td>
                     </tr>
                     @endforelse
                 </tbody>

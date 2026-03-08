@@ -43,13 +43,15 @@ class DashboardController extends Controller
         $assignedVouchers = $pic->initialVouchers()
             ->with(['batch', 'claim'])
             ->where('status', 'ASSIGNED')
-            ->latest()
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'assigned_page');
 
         $claimedVouchers = $pic->initialVouchers()
             ->with(['claim', 'merchantVouchers.merchant'])
             ->where('status', 'CLAIMED')
-            ->latest()
+            ->orderBy('claimed_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'claimed_page');
 
         $redeemedVouchers = $pic->initialVouchers()
@@ -62,7 +64,8 @@ class DashboardController extends Controller
                 },
                 'claim'
             ])
-            ->latest()
+            ->orderBy('updated_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'redeemed_page');
 
         return view('pic.dashboard', compact('pic', 'stats', 'assignedVouchers', 'claimedVouchers', 'redeemedVouchers'));
