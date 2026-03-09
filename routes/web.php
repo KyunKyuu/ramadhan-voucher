@@ -103,6 +103,7 @@ use App\Http\Controllers\Pic\DashboardController as PicDashboardController;
 Route::middleware(['auth', 'role:PIC'])->prefix('pic')->name('pic.')->group(function () {
     Route::get('/', [PicDashboardController::class, 'index'])->name('dashboard');
     Route::get('/vouchers/export', [PicDashboardController::class, 'exportVouchers'])->name('vouchers.export');
+    Route::get('/data/export', [PicDashboardController::class, 'exportData'])->name('data.export');
 });
 
 // Public Routes - No authentication required

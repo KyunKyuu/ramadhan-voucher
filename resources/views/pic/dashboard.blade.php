@@ -71,14 +71,20 @@
     
     <!-- Assigned Vouchers -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 class="text-lg font-medium text-gray-900">Daftar Voucher Assigned</h3>
-            <div>
-                 <a href="{{ route('pic.vouchers.export') }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center">
+            <div class="flex flex-wrap gap-2">
+                <button onclick="document.getElementById('exportModal').classList.remove('hidden')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center transition">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Export Data Excel
+                </button>
+                 <a href="{{ route('pic.vouchers.export') }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center transition">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Export Voucher
+                    Export PDF Voucher
                 </a>
             </div>
         </div>
@@ -235,5 +241,61 @@
     </div>
 
 
+</div>
+
+<!-- Export Modal -->
+<div id="exportModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="document.getElementById('exportModal').classList.add('hidden')"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <form action="{{ route('pic.data.export') }}" method="GET">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Export Data Pendataan
+                            </h3>
+                            <div class="mt-4 space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Tipe Data</label>
+                                    <select name="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2 border">
+                                        <option value="claimed">Data Claimed (Default)</option>
+                                        <option value="redeem">Data Redeem</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Dari Tanggal</label>
+                                        <input type="date" name="date_from" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2 border">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Sampai Tanggal</label>
+                                        <input type="date" name="date_to" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2 border">
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 italic">* Kosongkan tanggal untuk export semua data (all time).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Download Excel (CSV)
+                    </button>
+                    <button type="button" onclick="document.getElementById('exportModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
