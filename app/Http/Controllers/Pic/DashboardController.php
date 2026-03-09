@@ -47,12 +47,14 @@ class DashboardController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'assigned_page');
 
+        $claimedPerPage = request()->input('claimed_per_page', 10);
+
         $claimedVouchers = $pic->initialVouchers()
             ->with(['claim', 'merchantVouchers.merchant'])
             ->where('status', 'CLAIMED')
             ->orderBy('claimed_at', 'desc')
             ->orderBy('id', 'desc')
-            ->paginate(10, ['*'], 'claimed_page');
+            ->paginate($claimedPerPage, ['*'], 'claimed_page');
 
         $redeemedVouchers = $pic->initialVouchers()
             ->whereHas('merchantVouchers', function ($q) {
@@ -158,7 +160,7 @@ class DashboardController extends Controller
 
             return response()->streamDownload(function () use ($vouchers, $dateFrom, $dateTo) {
                 $handle = fopen('php://output', 'w');
-                fputcsv($handle, ['No', 'Voucher Code', 'Merchant', 'Donatur', 'Nominal Donasi', 'Komisi', 'Tanggal Redeem']);
+                fputcsv($handle, ['No', 'Voucher Code', 'Merchant', 'Donatur', 'Zakat Fitrah', 'Zakat Mal', 'Infaq', 'Sodaqoh', 'Total Donasi', 'Komisi', 'Tanggal Redeem']);
 
                 $count = 1;
                 foreach ($vouchers as $voucher) {
@@ -168,12 +170,22 @@ class DashboardController extends Controller
                             if ($dateFrom && $mv->redeemed_at->lt($dateFrom)) continue;
                             if ($dateTo && $mv->redeemed_at->gt($dateTo)) continue;
 
+                            $zf = (float)($voucher->claim->zakat_fitrah_amount ?? 0);
+                            $zm = (float)($voucher->claim->zakat_mal_amount ?? 0);
+                            $inf = (float)($voucher->claim->infaq_amount ?? 0);
+                            $sod = (float)($voucher->claim->sodaqoh_amount ?? 0);
+                            $total = $zf + $zm + $inf + $sod;
+
                             fputcsv($handle, [
                                 $count++,
                                 $voucher->code,
                                 $mv->merchant->name ?? '-',
                                 $voucher->claim->name ?? '-',
-                                (float)(($voucher->claim->zakat_fitrah_amount ?? 0) + ($voucher->claim->zakat_mal_amount ?? 0) + ($voucher->claim->infaq_amount ?? 0) + ($voucher->claim->sodaqoh_amount ?? 0)),
+                                $zf,
+                                $zm,
+                                $inf,
+                                $sod,
+                                $total,
                                 $voucher->commission_amount,
                                 $mv->redeemed_at ? $mv->redeemed_at->format('Y-m-d H:i:s') : '-'
                             ]);
@@ -200,16 +212,25 @@ class DashboardController extends Controller
 
             return response()->streamDownload(function () use ($vouchers) {
                 $handle = fopen('php://output', 'w');
-                fputcsv($handle, ['No', 'Voucher Code', 'Donatur', 'Nominal Donasi', 'Tanggal Claim', 'Status Voucher', 'Status Dana']);
+                fputcsv($handle, ['No', 'Voucher Code', 'Donatur', 'Zakat Fitrah', 'Zakat Mal', 'Infaq', 'Sodaqoh', 'Total Donasi', 'Tanggal Claim', 'Status Voucher', 'Status Dana']);
 
                 $count = 1;
                 foreach ($vouchers as $voucher) {
-                    $totalDonasi = (float)(($voucher->claim->zakat_fitrah_amount ?? 0) + ($voucher->claim->zakat_mal_amount ?? 0) + ($voucher->claim->infaq_amount ?? 0) + ($voucher->claim->sodaqoh_amount ?? 0));
+                    $zf = (float)($voucher->claim->zakat_fitrah_amount ?? 0);
+                    $zm = (float)($voucher->claim->zakat_mal_amount ?? 0);
+                    $inf = (float)($voucher->claim->infaq_amount ?? 0);
+                    $sod = (float)($voucher->claim->sodaqoh_amount ?? 0);
+                    $total = $zf + $zm + $inf + $sod;
+
                     fputcsv($handle, [
                         $count++,
                         $voucher->code,
                         $voucher->claim->name ?? '-',
-                        $totalDonasi,
+                        $zf,
+                        $zm,
+                        $inf,
+                        $sod,
+                        $total,
                         $voucher->claimed_at ? $voucher->claimed_at->format('Y-m-d H:i:s') : '-',
                         $voucher->status,
                         $voucher->claim->verification_status ?? 'PENDING'

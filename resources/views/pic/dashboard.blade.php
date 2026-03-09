@@ -131,8 +131,18 @@
 
     <!-- Claimed Vouchers -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 class="text-lg font-medium text-gray-900">Daftar Voucher Claimed (Belum Redeem)</h3>
+            <div class="flex items-center space-x-2">
+                <label for="claimed_per_page" class="text-sm text-gray-600">Tampilkan:</label>
+                <select id="claimed_per_page" onchange="window.location.href = '{{ route('pic.dashboard') }}?claimed_per_page=' + this.value + '&assigned_page={{ $assignedVouchers->currentPage() }}&redeemed_page={{ $redeemedVouchers->currentPage() }}'" class="text-sm border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-1 border">
+                    <option value="10" {{ request('claimed_per_page') == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ request('claimed_per_page') == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ request('claimed_per_page') == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('claimed_per_page') == 100 ? 'selected' : '' }}>100</option>
+                </select>
+                <span class="text-sm text-gray-600">data</span>
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -188,7 +198,7 @@
             </table>
         </div>
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $claimedVouchers->appends(['assigned_page' => $assignedVouchers->currentPage(), 'redeemed_page' => $redeemedVouchers->currentPage()])->links() }}
+            {{ $claimedVouchers->appends(['assigned_page' => $assignedVouchers->currentPage(), 'redeemed_page' => $redeemedVouchers->currentPage(), 'claimed_per_page' => request('claimed_per_page', 10)])->links() }}
         </div>
     </div>
 
