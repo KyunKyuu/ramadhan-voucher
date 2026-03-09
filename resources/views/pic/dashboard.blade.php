@@ -73,19 +73,24 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 class="text-lg font-medium text-gray-900">Daftar Voucher Assigned</h3>
-            <div class="flex flex-wrap gap-2">
-                <button onclick="document.getElementById('exportModal').classList.remove('hidden')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center transition">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Export Data Excel
-                </button>
-                 <a href="{{ route('pic.vouchers.export') }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center transition">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                    </svg>
-                    Export PDF Voucher
-                </a>
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <label for="assigned_per_page" class="text-sm text-gray-600">Tampilkan:</label>
+                    <select id="assigned_per_page" onchange="window.location.href = '{{ route('pic.dashboard') }}?assigned_per_page=' + this.value + '&claimed_page={{ $claimedVouchers->currentPage() }}&redeemed_page={{ $redeemedVouchers->currentPage() }}&claimed_per_page={{ request('claimed_per_page', 10) }}&redeemed_per_page={{ request('redeemed_per_page', 10) }}'" class="text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-1 border">
+                        <option value="10" {{ request('assigned_per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('assigned_per_page') == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('assigned_per_page') == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('assigned_per_page') == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                </div>
+                <div>
+                    <a href="{{ route('pic.vouchers.export') }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center transition">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Export PDF Voucher
+                    </a>
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto">
@@ -125,7 +130,7 @@
             </table>
         </div>
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $assignedVouchers->appends(['claimed_page' => $claimedVouchers->currentPage(), 'redeemed_page' => $redeemedVouchers->currentPage()])->links() }}
+            {{ $assignedVouchers->appends(['claimed_page' => $claimedVouchers->currentPage(), 'redeemed_page' => $redeemedVouchers->currentPage(), 'assigned_per_page' => request('assigned_per_page', 10), 'claimed_per_page' => request('claimed_per_page', 10), 'redeemed_per_page' => request('redeemed_per_page', 10)])->links() }}
         </div>
     </div>
 
@@ -133,15 +138,22 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 class="text-lg font-medium text-gray-900">Daftar Voucher Claimed (Belum Redeem)</h3>
-            <div class="flex items-center space-x-2">
-                <label for="claimed_per_page" class="text-sm text-gray-600">Tampilkan:</label>
-                <select id="claimed_per_page" onchange="window.location.href = '{{ route('pic.dashboard') }}?claimed_per_page=' + this.value + '&assigned_page={{ $assignedVouchers->currentPage() }}&redeemed_page={{ $redeemedVouchers->currentPage() }}'" class="text-sm border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-1 border">
-                    <option value="10" {{ request('claimed_per_page') == 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ request('claimed_per_page') == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ request('claimed_per_page') == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ request('claimed_per_page') == 100 ? 'selected' : '' }}>100</option>
-                </select>
-                <span class="text-sm text-gray-600">data</span>
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <label for="claimed_per_page" class="text-sm text-gray-600">Tampilkan:</label>
+                    <select id="claimed_per_page" onchange="window.location.href = '{{ route('pic.dashboard') }}?claimed_per_page=' + this.value + '&assigned_page={{ $assignedVouchers->currentPage() }}&redeemed_page={{ $redeemedVouchers->currentPage() }}&assigned_per_page={{ request('assigned_per_page', 10) }}&redeemed_per_page={{ request('redeemed_per_page', 10) }}'" class="text-sm border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-1 border">
+                        <option value="10" {{ request('claimed_per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('claimed_per_page') == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('claimed_per_page') == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('claimed_per_page') == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                </div>
+                <button onclick="document.getElementById('exportModal').classList.remove('hidden')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded text-sm inline-flex items-center transition">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Export Data Excel
+                </button>
             </div>
         </div>
         <div class="overflow-x-auto">
@@ -204,8 +216,18 @@
 
     <!-- Redeemed Vouchers -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 class="text-lg font-medium text-gray-900">Daftar Voucher Redeemed (Komisi Cair)</h3>
+            <div class="flex items-center space-x-2">
+                <label for="redeemed_per_page" class="text-sm text-gray-600">Tampilkan:</label>
+                <select id="redeemed_per_page" onchange="window.location.href = '{{ route('pic.dashboard') }}?redeemed_per_page=' + this.value + '&assigned_page={{ $assignedVouchers->currentPage() }}&claimed_page={{ $claimedVouchers->currentPage() }}&assigned_per_page={{ request('assigned_per_page', 10) }}&claimed_per_page={{ request('claimed_per_page', 10) }}'" class="text-sm border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-1 border">
+                    <option value="10" {{ request('redeemed_per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ request('redeemed_per_page') == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ request('redeemed_per_page') == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('redeemed_per_page') == 100 ? 'selected' : '' }}>100</option>
+                </select>
+                <span class="text-sm text-gray-600">data</span>
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -246,7 +268,7 @@
             </table>
         </div>
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $redeemedVouchers->appends(['assigned_page' => $assignedVouchers->currentPage(), 'claimed_page' => $claimedVouchers->currentPage()])->links() }}
+            {{ $redeemedVouchers->appends(['assigned_page' => $assignedVouchers->currentPage(), 'claimed_page' => $claimedVouchers->currentPage(), 'redeemed_per_page' => request('redeemed_per_page', 10), 'assigned_per_page' => request('assigned_per_page', 10), 'claimed_per_page' => request('claimed_per_page', 10)])->links() }}
         </div>
     </div>
 

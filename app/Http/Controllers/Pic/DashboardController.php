@@ -40,15 +40,15 @@ class DashboardController extends Controller
         // or just all of them if the volume isn't huge yet.
         // Given the requirement "berisi daftar voucher...", implying full lists or at least accessible.
 
+        $assignedPerPage = request()->input('assigned_per_page', 10);
         $assignedVouchers = $pic->initialVouchers()
             ->with(['batch', 'claim'])
             ->where('status', 'ASSIGNED')
             ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc')
-            ->paginate(10, ['*'], 'assigned_page');
+            ->paginate($assignedPerPage, ['*'], 'assigned_page');
 
         $claimedPerPage = request()->input('claimed_per_page', 10);
-
         $claimedVouchers = $pic->initialVouchers()
             ->with(['claim', 'merchantVouchers.merchant'])
             ->where('status', 'CLAIMED')
@@ -56,6 +56,7 @@ class DashboardController extends Controller
             ->orderBy('id', 'desc')
             ->paginate($claimedPerPage, ['*'], 'claimed_page');
 
+        $redeemedPerPage = request()->input('redeemed_per_page', 10);
         $redeemedVouchers = $pic->initialVouchers()
             ->whereHas('merchantVouchers', function ($q) {
                 $q->where('status', 'REDEEMED');
@@ -68,7 +69,7 @@ class DashboardController extends Controller
             ])
             ->orderBy('updated_at', 'desc')
             ->orderBy('id', 'desc')
-            ->paginate(10, ['*'], 'redeemed_page');
+            ->paginate($redeemedPerPage, ['*'], 'redeemed_page');
 
         return view('pic.dashboard', compact('pic', 'stats', 'assignedVouchers', 'claimedVouchers', 'redeemedVouchers'));
     }
